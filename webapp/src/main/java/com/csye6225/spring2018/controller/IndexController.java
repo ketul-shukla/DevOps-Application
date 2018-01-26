@@ -51,4 +51,16 @@ public class IndexController {
       return "User already exists";
     }
   }
+
+  @RequestMapping(value = "/login", method = RequestMethod.POST)
+  @ResponseBody
+  public String verifyLogin(@RequestParam("email") String emailID, @RequestParam("pass") String password) {
+    User findUser = userRepository.findByEmailID(emailID);
+    if(findUser.getEmailID().equals(emailID) && findUser.getPassword().equals(password)) {
+      Date date = new Date();
+      return date.toString();
+    } else {
+      return "Please enter correct credentials.";
+    }
+  }
 }
