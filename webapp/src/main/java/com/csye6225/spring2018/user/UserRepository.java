@@ -1,11 +1,9 @@
 package com.csye6225.spring2018.user;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.repository.CrudRepository;
 
-@Repository
-public interface UserRepository extends JpaRepository<User, Long> {
 
-    User findByEmailID(String email);
+public interface UserRepository extends CrudRepository<User, Long> {
+
+    User findByEmailID(String emailID);
 }
