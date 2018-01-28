@@ -30,37 +30,4 @@ public class IndexController {
     return "index";
   }
 
-  @RequestMapping(value = "/createAccount", method = RequestMethod.POST)
-  @ResponseBody
-  public String CreateAccount(@RequestParam("email") String emailAddress, @RequestParam("pass") String password) {
-
-    String userId = "";
-    User user = userRepository.findByEmailID(emailAddress);
-    if(user == null) {
-
-    User newUser = new User();
-    newUser.setEmailID(emailAddress);
-    newUser.setPassword(password);
-    logger.info("Email: " + emailAddress);
-    logger.info("Password: " + password);
-    userRepository.save(newUser);
-
-    return "Account Created Successfully";
-    }
-    else {
-      return "User already exists";
-    }
-  }
-
-  @RequestMapping(value = "/login", method = RequestMethod.POST)
-  @ResponseBody
-  public String verifyLogin(@RequestParam("email") String emailID, @RequestParam("pass") String password) {
-    User findUser = userRepository.findByEmailID(emailID);
-    if(findUser.getEmailID().equals(emailID) && findUser.getPassword().equals(password)) {
-      Date date = new Date();
-      return date.toString();
-    } else {
-      return "Please enter correct credentials.";
-    }
-  }
 }
