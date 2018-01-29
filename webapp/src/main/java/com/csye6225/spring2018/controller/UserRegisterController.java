@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.Date;
 import java.util.Map;
 
@@ -50,7 +52,8 @@ public class UserRegisterController {
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public String verifyLogin(@RequestParam("emailID") String emailID, @RequestParam("password") String password, Map<String, Object> model) {
+    public String verifyLogin(@RequestParam("emailID") String emailID, @RequestParam("password") String password, Map<String, Object> model, HttpServletRequest request) {
+        HttpSession session = request.getSession();
         User findUser = userRepository.findByEmailID(emailID);
         boolean passwordVerification = BCrypt.checkpw(password, findUser.getPassword());
         if(passwordVerification) {
@@ -63,7 +66,8 @@ public class UserRegisterController {
     }
 
     @RequestMapping(value = "/logout")
-    public String logout() {
+    public String logout(HttpServletRequest request) {
+        request.getSession().invalidate();
         return "index";
     }
 
