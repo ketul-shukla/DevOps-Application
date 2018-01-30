@@ -14,7 +14,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.Date;
+import java.util.Map;
 
 @Controller
 public class IndexController {
@@ -25,9 +28,15 @@ public class IndexController {
   private UserRepository userRepository;
 
   @RequestMapping("/")
-  public String index() {
-    logger.info("Loading home page.");
-    return "index";
+  public String index(HttpServletRequest request, Map<String, Object> model) {
+    HttpSession session = request.getSession(false);
+    if(session == null) {
+      logger.info("Loading home page.");
+      return "index";
+    } else {
+      model.put("date", new Date());
+      return "home";
+    }
   }
 
 }

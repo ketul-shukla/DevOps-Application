@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.Date;
 import java.util.Map;
 
@@ -18,6 +20,8 @@ import java.util.Map;
 public class UserRegisterController {
 
     private final static Logger logger = LoggerFactory.getLogger(UserRegisterController.class);
+
+    private HttpSession session;
 
     @Autowired
     private UserRepository userRepository;
@@ -28,11 +32,11 @@ public class UserRegisterController {
     }
 
     @RequestMapping(value = "/createAccount", method = RequestMethod.POST)
-    public String createAccount(@RequestParam("emailID") String emailAddress, @RequestParam("password") String password, Map<String, Object> model) {
-
+    public String createAccount(@RequestParam("emailID") String emailAddress, @RequestParam("password") String password, Map<String, Object> model, HttpServletRequest request) {
         String userId = "";
         User user = userRepository.findByEmailID(emailAddress);
         if(user == null) {
+            session = request.getSession();
             password = hashPassword(password);
             User newUser = new User();
             newUser.setEmailID(emailAddress);
@@ -50,10 +54,11 @@ public class UserRegisterController {
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public String verifyLogin(@RequestParam("emailID") String emailID, @RequestParam("password") String password, Map<String, Object> model) {
+    public String verifyLogin(@RequestParam("emailID") String emailID, @RequestParam("password") String password, Map<String, Object> model, HttpServletRequest request) {
         User findUser = userRepository.findByEmailID(emailID);
         boolean passwordVerification = BCrypt.checkpw(password, findUser.getPassword());
         if(passwordVerification) {
+            session = request.getSession();
             model.put("date", new Date());
             return "home";
         } else {
@@ -63,7 +68,8 @@ public class UserRegisterController {
     }
 
     @RequestMapping(value = "/logout")
-    public String logout() {
+    public String logout(HttpServletRequest request) {
+        request.getSession().invalidate();
         return "index";
     }
 
