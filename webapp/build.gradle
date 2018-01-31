@@ -47,6 +47,7 @@ dependencies {
     compile('org.springframework.boot:spring-boot-starter-security')
     compile ('org.springframework.boot:spring-boot-starter-thymeleaf')
 
+    compile ('junit:junit:4.12')
     compile('com.h2database:h2:+')
     compile('mysql:mysql-connector-java')
 

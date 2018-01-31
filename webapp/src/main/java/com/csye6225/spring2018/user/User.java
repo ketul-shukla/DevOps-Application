@@ -42,14 +42,4 @@ public class User implements Serializable {
         this.password = password;
     }
 
-    //    @Column(name = "created")
-//    @CreationTimestamp
-//    private Date created;
-//
-//    @Column(name = "updated")
-//    @UpdateTimestamp
-//    private Date updated;
-
-    //getters and setters
-
 }
