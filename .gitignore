@@ -28,3 +28,5 @@ dist/
 nbdist/
 .nb-gradle/
 
+
+webapp/src/main/resources/application\.properties
