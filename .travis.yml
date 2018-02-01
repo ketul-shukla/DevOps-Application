@@ -1,0 +1,16 @@
+language: java
+  jdk:
+    - oraclejdk8
+
+sudo: false
+install: true
+
+script:
+  - ./webapp/gradlew build
+
+notifications:
+  username:
+    recipients:
+      - dantala.a@northeastern.edu
+      - patel.ankit@northeastern.edu
+      - shukla.ke@northeastern.edu
