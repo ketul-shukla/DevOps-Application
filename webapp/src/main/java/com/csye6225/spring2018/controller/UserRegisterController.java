@@ -55,16 +55,22 @@ public class UserRegisterController {
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public String verifyLogin(@RequestParam("emailID") String emailID, @RequestParam("password") String password, Map<String, Object> model, HttpServletRequest request) {
-        User findUser = userRepository.findByEmailID(emailID);
-        boolean passwordVerification = BCrypt.checkpw(password, findUser.getPassword());
-        if(passwordVerification) {
-            session = request.getSession();
-            model.put("date", new Date());
-            return "home";
-        } else {
+        try{
+            User findUser = userRepository.findByEmailID(emailID);
+            boolean passwordVerification = BCrypt.checkpw(password, findUser.getPassword());
+            if(passwordVerification) {
+                session = request.getSession();
+                model.put("date", new Date());
+                return "home";
+            } else {
+                model.put("msg", "Please enter correct credentials");
+                return "error";
+            }
+        } catch(Exception e){
             model.put("msg", "Please enter correct credentials");
             return "error";
         }
+
     }
 
     @RequestMapping(value = "/logout")
