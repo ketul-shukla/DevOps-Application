@@ -11,9 +11,10 @@ script:
   - ./gradlew test
 
 notifications:
-  username:
-    email:
+  email:
+    recipients:
       - dantala.a@husky.neu.edu
       - patel.ankit@husky.neu.edu
       - shukla.ke@husky.neu.edu
     on_success: always
+    on_failure: always
