@@ -6,13 +6,13 @@ sudo: false
 install: true
 
 script:
-  - ./webapp/gradlew build --info
+  - ./webapp/gradlew build
   - cd webapp
-  - ./gradlew test --info
+  - ./gradlew test
 
 notifications:
   username:
-    recipients:
+    email:
       - dantala.a@husky.neu.edu
       - patel.ankit@husky.neu.edu
       - shukla.ke@husky.neu.edu
