@@ -6,7 +6,8 @@ sudo: false
 install: true
 
 script:
-  - ./webapp/gradlew build
+  - ./webapp/gradlew build --info
+  - ./webapp/gradlew test --info
 
 notifications:
   username:
