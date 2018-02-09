@@ -8,7 +8,7 @@ install: true
 script:
   - ./webapp/gradlew build
   - cd webapp
-  - ./gradlew test
+  - ./gradlew test --info
 
 notifications:
   email:

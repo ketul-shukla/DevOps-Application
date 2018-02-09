@@ -10,7 +10,7 @@ import static org.junit.Assert.assertEquals;
 
 public class ApplicationTests {
 
-    //@Ignore
+    @Ignore
     @Test
     public void testHomePage() throws URISyntaxException {
         RestAssured
