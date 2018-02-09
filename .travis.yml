@@ -6,12 +6,12 @@ sudo: false
 install: true
 
 script:
-  - ./webapp/gradlew build
+  - ./webapp/gradlew clean build
 
 notifications:
   username:
     recipients:
-      - dantala.a@northeastern.edu
-      - patel.ankit@northeastern.edu
-      - shukla.ke@northeastern.edu
+      - dantala.a@husky.neu.edu
+      - patel.ankit@husky.neu.edu
+      - shukla.ke@husky.neu.edu
     on_success: always
