@@ -7,7 +7,6 @@ install: true
 
 script:
   - ./webapp/gradlew build
-  - ./webapp/gradlew test --info
 
 notifications:
   username:
@@ -15,3 +14,4 @@ notifications:
       - dantala.a@northeastern.edu
       - patel.ankit@northeastern.edu
       - shukla.ke@northeastern.edu
+    on_success: always
