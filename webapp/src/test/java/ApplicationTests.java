@@ -32,7 +32,7 @@ public class ApplicationTests {
                 .then()
                 .statusCode(200);
     }
-// @Ignore
+    @Ignore
     @Test
     public void testUserRegistered() throws URISyntaxException {
         RestAssured
