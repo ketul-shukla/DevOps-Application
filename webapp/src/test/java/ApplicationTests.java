@@ -10,7 +10,7 @@ import static org.junit.Assert.assertEquals;
 
 public class ApplicationTests {
 
-   // @Ignore
+    @Ignore
     @Test
     public void testHomePage() throws URISyntaxException {
         RestAssured
@@ -20,7 +20,7 @@ public class ApplicationTests {
                 .statusCode(200);
     }
 
-   // @Ignore
+    @Ignore
     @Test
     public void testUserLoggedIn() throws URISyntaxException {
         RestAssured
@@ -32,7 +32,7 @@ public class ApplicationTests {
                 .then()
                 .statusCode(200);
     }
- //@Ignore
+    @Ignore
     @Test
     public void testUserRegistered() throws URISyntaxException {
         RestAssured
