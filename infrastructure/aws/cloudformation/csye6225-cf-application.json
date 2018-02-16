@@ -16,6 +16,48 @@
 		"volumeSize": {
 			"Description" : "volumeSize",
 			"Type" : "Number"		
+		},
+		"DynamoDBTableName": {
+			"Description" : "DynamoDBTableName",
+			"Type" : "String"
+		},
+		"S3BucketName": {
+			"Description" : "S3BucketName",
+			"Type" : "String"
+		},
+		"DBEngine": {
+			"Description" : "DBEngine",
+			"Type" : "String"
+		},
+		"DBEngineVersion": {
+			"Description" : "EngineVersion",
+			"Type" : "String"
+		},
+		"DBInstanceClass": {
+			"Description" : "DBInstanceClass",
+			"Type" : "String"
+		},
+		"DBInstanceIdentifier": {
+			"Description" : "DBInstanceIdentifier",
+			"Type" : "String"
+		},
+		"DBUser": {
+			"Description" : "DBUser",
+			"Type" : "String"
+		},
+		"DBPassword": {
+			"Description" : "DBPassword",
+			"Type" : "String"
+		},
+		"DBName": {
+			"Description" : "DBName",
+			"Type" : "String"
+		},
+		"SubnetId": {
+			"Type" : "String"
+		},
+		"SubnetId2": {
+			"Type" : "String"
 		}
 		
 	}, 
@@ -35,6 +77,59 @@
                   			}
                			}]
          		}
-     	 	}
+     	 	},
+		"myDynamoDBTable" : {
+		      "Type" : "AWS::DynamoDB::Table",
+		      "Properties" : {
+		   		"AttributeDefinitions" : [
+			  		{
+					    	"AttributeName" : "id",
+					    	"AttributeType" : "S"   
+			  		}
+				],
+				"KeySchema" : [
+		  			{
+						"AttributeName" : "id",
+						"KeyType" : "HASH"
+		  			}
+				],
+				"ProvisionedThroughput" : {
+					"ReadCapacityUnits" : "5",
+					"WriteCapacityUnits" : "5"
+				},
+				"TableName" : {"Ref" : "DynamoDBTableName"}
+		      }
+	    	},
+		"myS3Bucket" : {
+  			"Type" : "AWS::S3::Bucket",
+  			"Properties" : {
+				"AccessControl" : "PublicRead",
+				"BucketName" : {"Ref" : "S3BucketName"}
+			}
+		},
+		"myRDSDBInstance" : {
+   			"Type" : "AWS::RDS::DBInstance",
+   			"Properties" : {
+				"Engine" : {"Ref" : "DBEngine"},
+				"EngineVersion" : {"Ref" : "DBEngineVersion"},
+				"DBInstanceClass" : {"Ref" : "DBInstanceClass"},
+				"MultiAZ" : "false",
+				"DBInstanceIdentifier" : {"Ref" : "DBInstanceIdentifier"},
+				"MasterUsername" : {"Ref" : "DBUser"},
+			        "MasterUserPassword" : {"Ref" : "DBPassword"},
+			        "DBSubnetGroupName" : {"Ref" : "myDBSubnetGroup"},
+				"PubliclyAccessible": "false",
+			        "DBName" : { "Ref" : "DBName" },
+      			},
+   		},
+		"myDBSubnetGroup": {
+            		"Type": "AWS::RDS::DBSubnetGroup",
+            		"Properties": {
+                		"SubnetIds": [
+					{"Ref": "SubnetId"}, 
+					{"Ref": "SubnetId2"}
+				]
+            		}
+        	}     
 	}
 }
