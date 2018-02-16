@@ -45,6 +45,7 @@ public class UserRegisterController {
             logger.info("Password: " + password);
             userRepository.save(newUser);
             model.put("date", new Date());
+            session.setAttribute("emailID", emailAddress);
             return "home";
         }
         else {
@@ -60,6 +61,7 @@ public class UserRegisterController {
             boolean passwordVerification = BCrypt.checkpw(password, findUser.getPassword());
             if(passwordVerification) {
                 session = request.getSession();
+                session.setAttribute("emailID", findUser.getEmailID());
                 model.put("date", new Date());
                 return "home";
             } else {
