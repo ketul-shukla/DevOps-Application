@@ -4,7 +4,7 @@
     <body>
         <div th:replace="fragments/navigation :: navigation"/>
         <!-- Page Content -->
-        <div th:replace="fragments/profile :: profile"/>
+        <!--<div th:replace="fragments/profile :: profile"/>-->
         <div class="container">
 
             <div>
@@ -16,6 +16,16 @@
                     <span th:text="${date}"></span>
                 </h2>
             </p>
+            <!--<img th:src="${#httpServletRequest.getParameter()}"/>-->
+            <form method="post" enctype="multipart/form-data" action="/uploadPicture">
+                <div>
+                    <label>File Upload: </label>
+                    <input type="file" placeholder="Enter Select image" name="imageFile" required=""/>
+                </div>
+                <div>
+                    <button type="submit">Upload</button>
+                </div>
+            </form>
         </div>
         <!-- /.container -->
         <div th:replace="fragments/footer :: footer"/>

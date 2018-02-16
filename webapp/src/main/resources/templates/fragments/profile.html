@@ -5,7 +5,7 @@
 </head>
 <body>
 <div th:fragment="profile">
-    <from method="post" enctype="multipart/form-data" action="/">
+    <form method="post" enctype="multipart/form-data" action="/addUploadPicture">
         <img src="dummy.jpg" alt="profile picture" width ="500" height="500"/>
         <input type="file" name="profilePicture"/>
         <br/>
@@ -17,7 +17,7 @@
         <br/>
         <input type="submit" name="update" value="Update"/>
 
-    </from>
+    </form>
 </div>
 </body>
 </html>
