@@ -4,7 +4,10 @@
     <body>
         <div th:replace="fragments/navigation :: navigation"/>
         <!-- Page Content -->
+        <!--<div th:replace="fragments/profile :: profile"/>-->
+        <img th:src="@{/home/anil/csye6225/dev/csye6225-spring2018/webapp/build/libs/exploded/ROOT.war/img/default.jpg}"/>
         <div class="container">
+
             <div>
                 <label>Logout:</label>
                 <a href="/logout">Logout</a>
@@ -14,6 +17,17 @@
                     <span th:text="${date}"></span>
                 </h2>
             </p>
+            <img src="${image}" alt="abc"/>
+            <form method="post" enctype="multipart/form-data" action="/uploadPicture">
+                <div>
+                    <label>File Upload: </label>
+                    <input type="file" placeholder="Enter Select image" name="imageFile" required=""/>
+                </div>
+                <div>
+                    <button type="submit">Upload</button>
+                </div>
+                <input type="text" maxlength="140" size="140" placeholder="About Me" name="aboutMe" th:value="${aboutMe}"/>
+            </form>
         </div>
         <!-- /.container -->
         <div th:replace="fragments/footer :: footer"/>
