@@ -17,7 +17,7 @@
                     <span th:text="${date}"></span>
                 </h2>
             </p>
-            <img src="/home/anil/csye6225/dev/csye6225-spring2018/webapp/build/libs/exploded/ROOT.war/img/ans.jpg"/>
+            <img src="${image}" alt="abc"/>
             <form method="post" enctype="multipart/form-data" action="/uploadPicture">
                 <div>
                     <label>File Upload: </label>
@@ -26,6 +26,7 @@
                 <div>
                     <button type="submit">Upload</button>
                 </div>
+                <input type="text" maxlength="140" size="140" placeholder="About Me" name="aboutMe" th:value="${aboutMe}"/>
             </form>
         </div>
         <!-- /.container -->

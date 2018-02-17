@@ -30,24 +30,43 @@ public class ProfileController {
     private UserRepository userRepository;
 
     @RequestMapping(value = "/uploadPicture", method = RequestMethod.POST)
-    public String addUploadPicture(@RequestParam("imageFile") MultipartFile file, Map<String, Object> model, HttpServletRequest request) {
+    public String addUploadPicture(@RequestParam("imageFile") MultipartFile file, @RequestParam("aboutMe") String aboutMe, Map<String, Object> model, HttpServletRequest request) {
 
             if (!file.isEmpty()) {
                 try {
+                    String fileExtension = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf(".") + 1);
+                    if(fileExtension.equalsIgnoreCase("jpeg") || fileExtension.equalsIgnoreCase("jpg") || fileExtension.equalsIgnoreCase("png")) {
                     String uploadsDir = "/img";
                     String email = request.getSession().getAttribute("emailID").toString();
                     String path = request.getServletContext().getRealPath(uploadsDir);
-                    String filename = file.getOriginalFilename();
+//                    String filename = file.getOriginalFilename();
+                    File f = new File(path + File.separator + email);
+                    System.out.println(path + " " + email);
+                    if(f.exists()) {
+                        f.delete();
+                    }
 
                     System.out.println(path+" "+email);
 
-                    byte[] bytes = file.getBytes();
-                    BufferedOutputStream stream =new BufferedOutputStream(new FileOutputStream(
-                            new File(path + File.separator + email)));
-                    stream.write(bytes);
-                    stream.flush();
-                    stream.close();
-                    return "home";
+                        byte[] bytes = file.getBytes();
+                        BufferedOutputStream stream =new BufferedOutputStream(new FileOutputStream(
+                                new File(path + File.separator + email)));
+                        stream.write(bytes);
+                        stream.flush();
+                        stream.close();
+
+                        User findUser = userRepository.findByEmailID(email);
+                        findUser.setAboutMe(aboutMe);
+                        userRepository.save(findUser);
+
+                        return "home";
+                    }
+                    else {
+                        model.put("msg", "Invalid File");
+                        return "error";
+                    }
+
+
                 } catch (Exception e) {
                     model.put("msg", e);
                     return "error";
@@ -59,25 +78,32 @@ public class ProfileController {
             }
         }
 
-    @RequestMapping(value = "/fetchPicture", method = RequestMethod.POST)
-    public String fetchPicture(@RequestParam("email") String email, Map<String, Object> model, HttpServletRequest request) {
+    @RequestMapping(value = "/searchProfile", method = RequestMethod.POST)
+    public String fetchPicture(@RequestParam("search") String email, Map<String, Object> model, HttpServletRequest request) {
 
             try {
+                User findUser = userRepository.findByEmailID(email);
+                if(findUser == null) {
+                    model.put("msg", "User not found");
+                    return "error";
+                }
                 String uploadsDir = "/img";
 //                String email = request.getSession().getAttribute("emailID").toString();
                 String path = request.getServletContext().getRealPath(uploadsDir);
-                File f = new File(path + File.separator + email);
-                System.out.println(path + " " + email);
-                System.out.println(f.getPath());
-                System.out.println(f.getAbsolutePath());
+                File f = new File(path + File.separator + findUser.getEmailID());
+                System.out.println(path + " " + findUser.getEmailID());
+//                    System.out.println(f.getPath());
+//                    System.out.println(f.getAbsolutePath());
                 System.out.println(f.exists() + " " + f.isDirectory());
                 if(f.exists() && !f.isDirectory()) {
-                    System.out.println("File Exists");
+                    model.put("image", f.getAbsolutePath());
                 }
                 else {
-                    System.out.println("File not found");
+                    model.put("image", path + File.separator + "default.jpg");
                 }
-                return "home";
+                model.put("aboutMe", findUser.getAboutMe());
+                model.put("email", findUser.getEmailID());
+                return "search";
             } catch (Exception e) {
                 model.put("msg", e);
                 return "error";
