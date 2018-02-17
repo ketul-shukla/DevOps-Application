@@ -76,7 +76,7 @@
 		        "Properties" : {
 		               "VpcId" : { "Ref" : "myVPC" },
 		               "CidrBlock" : "10.0.0.0/24",
-		               "AvailabilityZone" : {"Fn::GetAtt" : ["mySubnet", "AvailbilityZone" ]},
+		               "AvailabilityZone" : "us-east-1a",
 		               "Tags": [{
 		            		"Key": "Name",
 		            		"Value": {"Fn::Join": [ "", [{ "Ref" : "AWS::StackName" },"-csye6225-subnet-for-webservers"]] }
@@ -99,7 +99,7 @@
 		        "Properties" : {
 		               "VpcId" : { "Ref" : "myVPC" },
 		               "CidrBlock" : "10.0.1.0/24",
-		               "AvailabilityZone" : {"Fn::GetAtt" : ["mySubnet", "AvailbilityZone" ]},
+		               "AvailabilityZone" : "us-east-1a",
 		               "Tags": [{
 		            		"Key": "Name",
 		            		"Value": {"Fn::Join": [ "", [{ "Ref" : "AWS::StackName" },"-csye6225-subnet-for-dbservers"]] }
@@ -117,9 +117,10 @@
 				   }
 			}
              	},
-		"csye6225-webapp": {
+		"myEC2SecurityGroup": {
 		    "Type": "AWS::EC2::SecurityGroup",
 		    "Properties": {
+			"GroupDescription" : "csye6225-webapp",
 		        "VpcId": {
 		            "Ref": "myVPC"
 		        },
@@ -150,12 +151,13 @@
 			]
 		    }
 		},
-		"csye6225-rds": {
+		"myRDSSecurityGroup": {
 		      "Type": "AWS::RDS::DBSecurityGroup",
 		      "Properties": {
-		            "EC2VpcId" : { "Ref" : "myVPC" },
+			    "GroupDescription" : "csye6225-rds",
+			    "EC2VpcId" : { "Ref" : "myVPC" },
 		            "DBSecurityGroupIngress": [
-		                {"EC2SecurityGroupName": { "Ref": "csye6225-webapp"}}
+		                {"EC2SecurityGroupId": { "Fn::GetAtt" : [ "myEC2SecurityGroup" , "GroupId" ]}}
 		            ]
 		       }
 		}

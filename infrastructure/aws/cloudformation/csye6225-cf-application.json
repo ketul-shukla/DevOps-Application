@@ -119,12 +119,13 @@
 			        "MasterUserPassword" : {"Ref" : "DBPassword"},
 			        "DBSubnetGroupName" : {"Ref" : "myDBSubnetGroup"},
 				"PubliclyAccessible": "false",
-			        "DBName" : { "Ref" : "DBName" },
-      			},
+			        "DBName" : { "Ref" : "DBName" }
+      			}
    		},
 		"myDBSubnetGroup": {
             		"Type": "AWS::RDS::DBSubnetGroup",
             		"Properties": {
+				"DBSubnetGroupDescription" : "description", 
                 		"SubnetIds": [
 					{"Ref": "SubnetId"}, 
 					{"Ref": "SubnetId2"}
