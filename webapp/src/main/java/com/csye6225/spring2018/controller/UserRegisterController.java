@@ -63,12 +63,13 @@ public class UserRegisterController {
             if(passwordVerification) {
                 session = request.getSession();
                 session.setAttribute("emailID", findUser.getEmailID());
+                String aboutMe = findUser.getAboutMe();
                 model.put("date", new Date());
 
                     String uploadsDir = "/img";
 //                String email = request.getSession().getAttribute("emailID").toString();
                     String path = request.getServletContext().getRealPath(uploadsDir);
-                    File f = new File(path + File.separator + "ankit.jpeg");
+                    File f = new File(path + File.separator + emailID);
                     System.out.println(path + " " + emailID);
 //                    System.out.println(f.getPath());
 //                    System.out.println(f.getAbsolutePath());
@@ -77,9 +78,9 @@ public class UserRegisterController {
                         model.put("image", f.getAbsolutePath());
                     }
                     else {
-                        System.out.println("Image not found");
+                        model.put("image", path + File.separator + "default.jpg");
                     }
-
+                    model.put("aboutMe", aboutMe);
                 return "home";
             } else {
                 model.put("msg", "Please enter correct credentials");

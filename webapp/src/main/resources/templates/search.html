@@ -1,0 +1,17 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:replace="fragments/header :: header"/>
+
+<head>
+    <div th:replace="fragments/navigation :: navigation"/>
+    <title>Search Profile</title>
+</head>
+<body>
+
+<span th:text="${email}"></span>
+<img src="${image}" alt="abc"/>
+<span th:text="${aboutMe}"></span>
+
+
+</body>
+</html>
