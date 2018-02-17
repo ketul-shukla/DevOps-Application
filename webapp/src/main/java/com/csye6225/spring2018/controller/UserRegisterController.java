@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.io.File;
 import java.util.Date;
 import java.util.Map;
 
@@ -63,6 +64,22 @@ public class UserRegisterController {
                 session = request.getSession();
                 session.setAttribute("emailID", findUser.getEmailID());
                 model.put("date", new Date());
+
+                    String uploadsDir = "/img";
+//                String email = request.getSession().getAttribute("emailID").toString();
+                    String path = request.getServletContext().getRealPath(uploadsDir);
+                    File f = new File(path + File.separator + "ankit.jpeg");
+                    System.out.println(path + " " + emailID);
+//                    System.out.println(f.getPath());
+//                    System.out.println(f.getAbsolutePath());
+                    System.out.println(f.exists() + " " + f.isDirectory());
+                    if(f.exists() && !f.isDirectory()) {
+                        model.put("image", f.getAbsolutePath());
+                    }
+                    else {
+                        System.out.println("Image not found");
+                    }
+
                 return "home";
             } else {
                 model.put("msg", "Please enter correct credentials");
