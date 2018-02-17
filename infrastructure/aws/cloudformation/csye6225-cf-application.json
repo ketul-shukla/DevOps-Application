@@ -53,13 +53,9 @@
 			"Description" : "DBName",
 			"Type" : "String"
 		},
-		"SubnetId": {
-			"Type" : "String"
-		},
-		"SubnetId2": {
+		"DBSubnetGroup": {
 			"Type" : "String"
 		}
-		
 	}, 
 	"Resources": {
 		"MyEC2Instance" : {
@@ -69,14 +65,14 @@
 				 "ImageId" : {"Ref" : "imgID"},
 				 "DisableApiTermination" : "false",
            			 "BlockDeviceMappings" : [{
-                  			"DeviceName" : "/dev/sdm",
+                  			"DeviceName" : "/dev/sda1",
                   			"Ebs" : {
                      				"VolumeType" : {"Ref" : "volumeType"},
                      				"DeleteOnTermination" : "false",
                      				"VolumeSize" : {"Ref" : "volumeSize"}
                   			}
                			}]
-         		}
+			 }
      	 	},
 		"myDynamoDBTable" : {
 		      "Type" : "AWS::DynamoDB::Table",
@@ -110,6 +106,7 @@
 		"myRDSDBInstance" : {
    			"Type" : "AWS::RDS::DBInstance",
    			"Properties" : {
+				"AllocatedStorage" : "5",
 				"Engine" : {"Ref" : "DBEngine"},
 				"EngineVersion" : {"Ref" : "DBEngineVersion"},
 				"DBInstanceClass" : {"Ref" : "DBInstanceClass"},
@@ -117,20 +114,10 @@
 				"DBInstanceIdentifier" : {"Ref" : "DBInstanceIdentifier"},
 				"MasterUsername" : {"Ref" : "DBUser"},
 			        "MasterUserPassword" : {"Ref" : "DBPassword"},
-			        "DBSubnetGroupName" : {"Ref" : "myDBSubnetGroup"},
+			        "DBSubnetGroupName" : {"Ref" : "DBSubnetGroup"},
 				"PubliclyAccessible": "false",
 			        "DBName" : { "Ref" : "DBName" }
       			}
-   		},
-		"myDBSubnetGroup": {
-            		"Type": "AWS::RDS::DBSubnetGroup",
-            		"Properties": {
-				"DBSubnetGroupDescription" : "description", 
-                		"SubnetIds": [
-					{"Ref": "SubnetId"}, 
-					{"Ref": "SubnetId2"}
-				]
-            		}
-        	}     
+   		}
 	}
 }
