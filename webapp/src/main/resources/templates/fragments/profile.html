@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+
+</head>
+<body>
+<div th:fragment="profile">
+    <form method="post" enctype="multipart/form-data" action="/addUploadPicture">
+        <img src="dummy.jpg" alt="profile picture" width ="500" height="500"/>
+        <input type="file" name="profilePicture"/>
+        <br/>
+        <span>About Me:</span>
+        <input type="text" name="aboutMe" size="140" placeholder="Describe yourself in upto 140 characters" maxlength="140"/>
+        <br/>
+        <span>EmailId:</span>
+        <label name="emailId"> </label>
+        <br/>
+        <input type="submit" name="update" value="Update"/>
+
+    </form>
+</div>
+</body>
+</html>

@@ -26,6 +26,9 @@ public class User implements Serializable {
     @Column(name = "password")
     private String password;
 
+    @Column(name = "aboutMe")
+    private String aboutMe;
+
     public String getEmailID() {
         return emailID;
     }
@@ -42,4 +45,11 @@ public class User implements Serializable {
         this.password = password;
     }
 
+    public String getAboutMe() {
+        return aboutMe;
+    }
+
+    public void setAboutMe(String aboutMe) {
+        this.aboutMe = aboutMe;
+    }
 }
