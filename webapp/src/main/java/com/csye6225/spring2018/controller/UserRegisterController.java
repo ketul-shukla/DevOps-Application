@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.io.File;
 import java.util.Date;
 import java.util.Map;
 
@@ -45,6 +46,7 @@ public class UserRegisterController {
             logger.info("Password: " + password);
             userRepository.save(newUser);
             model.put("date", new Date());
+            session.setAttribute("emailID", emailAddress);
             return "home";
         }
         else {
@@ -60,7 +62,25 @@ public class UserRegisterController {
             boolean passwordVerification = BCrypt.checkpw(password, findUser.getPassword());
             if(passwordVerification) {
                 session = request.getSession();
+                session.setAttribute("emailID", findUser.getEmailID());
+                String aboutMe = findUser.getAboutMe();
                 model.put("date", new Date());
+
+                    String uploadsDir = "/img";
+//                String email = request.getSession().getAttribute("emailID").toString();
+                    String path = request.getServletContext().getRealPath(uploadsDir);
+                    File f = new File(path + File.separator + emailID);
+                    System.out.println(path + " " + emailID);
+//                    System.out.println(f.getPath());
+//                    System.out.println(f.getAbsolutePath());
+                    System.out.println(f.exists() + " " + f.isDirectory());
+                    if(f.exists() && !f.isDirectory()) {
+                        model.put("image", f.getAbsolutePath());
+                    }
+                    else {
+                        model.put("image", path + File.separator + "default.jpg");
+                    }
+                    model.put("aboutMe", aboutMe);
                 return "home";
             } else {
                 model.put("msg", "Please enter correct credentials");
