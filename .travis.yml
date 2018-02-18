@@ -12,13 +12,12 @@ branches:
 script:
   - pwd
   - cd webapp
+  - ./gradlew test --info
   - ./gradlew war
   - cd ..
   - pwd
   - ls -al
-  - cd webapp
-  - ./gradlew test --info
-
+  
 after_success:
   - pwd
   - ls -al
