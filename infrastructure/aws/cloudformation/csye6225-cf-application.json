@@ -17,6 +17,14 @@
 			"Description" : "volumeSize",
 			"Type" : "Number"		
 		},
+		"securityGroupId": {
+			"Description" : "securityGroupId",
+			"Type" : "String"		
+		},
+		"subnetId": {
+			"Description" : "subnetId",
+			"Type" : "String"		
+		},
 		"DynamoDBTableName": {
 			"Description" : "DynamoDBTableName",
 			"Type" : "String"
@@ -71,8 +79,10 @@
                      				"DeleteOnTermination" : "false",
                      				"VolumeSize" : {"Ref" : "volumeSize"}
                   			}
-               			}]
-			 }
+               			}],
+				"SubnetId" : {"Ref" : "subnetId"},
+				"SecurityGroupIds" : [{"Ref" : "securityGroupId"}]
+			}
      	 	},
 		"myDynamoDBTable" : {
 		      "Type" : "AWS::DynamoDB::Table",

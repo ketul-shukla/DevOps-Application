@@ -7,7 +7,7 @@
 				"CidrBlock": "10.0.0.0/16",
 				"EnableDnsSupport": "false",
 				"EnableDnsHostnames": "false",
-				"InstanceTenancy": "dedicated",
+				"InstanceTenancy": "defaults",
 				"Tags": [{
 					"Key": "Name",
 					"Value": {"Fn::Join": [ "", [{ "Ref" : "AWS::StackName" },"-csye6225-vpc"]] }
