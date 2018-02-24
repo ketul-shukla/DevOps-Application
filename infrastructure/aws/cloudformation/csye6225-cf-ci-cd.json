@@ -186,15 +186,6 @@
 						"ComputePlatform" : {"Ref" : "CodeDeployApplicationComputePlatform"}
 					}
 				},
-				"myCodeDeployConfig" : {
-					"Type" : "AWS::CodeDeploy::DeploymentConfig",
-					"Properties" : {
-						"MinimumHealthyHosts" : {
-							"Type" : "FLEET_PERCENT",
-							"Value" : "99"
-						}
-					}
-				},
 				"myCodeDeploymentGroup" : {
 					"Type" : "AWS::CodeDeploy::DeploymentGroup",
 					"Properties" : {
@@ -209,7 +200,7 @@
 							"Value" : {"Ref" : "Ec2TagFiltersValue"},
 							"Type": {"Ref" : "Ec2TagFiltersType"}
 							}],
-							"DeploymentConfigName" : {"Ref" : "myCodeDeployConfig"},
+							"DeploymentConfigName" : "CodeDeployDefault.OneAtATime",
 							"ServiceRoleArn" : {"Fn::GetAtt" : ["myCodeDeployServiceRole","Arn"]}
 						}
 					},
