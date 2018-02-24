@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -30,43 +31,34 @@ public class ProfileController {
     private UserRepository userRepository;
 
     @RequestMapping(value = "/uploadPicture", method = RequestMethod.POST)
-    public String addUploadPicture(@RequestParam("imageFile") MultipartFile file, @RequestParam("aboutMe") String aboutMe, Map<String, Object> model, HttpServletRequest request) {
+    public String addUploadPicture(@RequestParam("imageFile") MultipartFile file, @RequestParam("aboutMe") String aboutMe, Map<String, Object> model, HttpServletRequest request, RedirectAttributes redirectAttributes) {
 
             if (!file.isEmpty()) {
                 try {
                     String fileExtension = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf(".") + 1);
                     if(fileExtension.equalsIgnoreCase("jpeg") || fileExtension.equalsIgnoreCase("jpg") || fileExtension.equalsIgnoreCase("png")) {
-                    String uploadsDir = "/img";
-                    String email = request.getSession().getAttribute("emailID").toString();
-                    String path = request.getServletContext().getRealPath(uploadsDir);
-//                    String filename = file.getOriginalFilename();
-                    File f = new File(path + File.separator + email);
-                    System.out.println(path + " " + email);
-                    if(f.exists()) {
-                        f.delete();
-                    }
-
-                    System.out.println(path+" "+email);
-
-                        byte[] bytes = file.getBytes();
-                        BufferedOutputStream stream =new BufferedOutputStream(new FileOutputStream(
-                                new File(path + File.separator + email)));
-                        stream.write(bytes);
-                        stream.flush();
-                        stream.close();
-
-                        User findUser = userRepository.findByEmailID(email);
-                        findUser.setAboutMe(aboutMe);
-                        userRepository.save(findUser);
-
-                        return "home";
+                      Path path = Paths.get(request.getServletContext().getRealPath("image"));
+                      String email = request.getSession().getAttribute("emailID").toString();
+                      int index = email.indexOf('@');
+                      email = email.substring(0,index);
+                      File f = new File(path + File.separator + email + ".jpg");
+                      String imgPath = path.toUri()+ email+"."+fileExtension;
+                      if(f.exists()) {
+                          f.delete();
+                      }
+                      model.put("picUrl", "/image/"+email+".jpg");
+//                      model.put("picUrl", imgPath);
+                      System.out.println(path.toUri()+email+"."+fileExtension);
+                      FileOutputStream fileOutputStream = new FileOutputStream(f);
+                      fileOutputStream.write(file.getBytes());
+                      fileOutputStream.flush();
+                      fileOutputStream.close();
+                      return "home";
                     }
                     else {
                         model.put("msg", "Invalid File");
                         return "error";
                     }
-
-
                 } catch (Exception e) {
                     model.put("msg", e);
                     return "error";
@@ -76,7 +68,18 @@ public class ProfileController {
             else {
                 return "error";
             }
-        }
+    }
+
+//    @RequestMapping(value = "/addImg", method = RequestMethod.GET)
+//    public String img(Map<String, Object> model, HttpServletRequest request) {
+//        String email = request.getSession().getAttribute("emailID").toString();
+//        int index = email.indexOf('@');
+//        email = email.substring(0,index);
+//
+//
+//        return "home";
+//    }
+
 
     @RequestMapping(value = "/searchProfile", method = RequestMethod.POST)
     public String fetchPicture(@RequestParam("search") String email, Map<String, Object> model, HttpServletRequest request) {
