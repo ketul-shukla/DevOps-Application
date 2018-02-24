@@ -48,6 +48,7 @@ public class UserRegisterController {
             logger.info("Password: " + password);
             userRepository.save(newUser);
             model.put("date", new Date());
+            model.put("picUrl", "/image/default.jpg");
             session.setAttribute("emailID", emailAddress);
             return "home";
         }
