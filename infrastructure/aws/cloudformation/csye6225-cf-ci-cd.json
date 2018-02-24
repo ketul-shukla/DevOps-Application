@@ -61,7 +61,7 @@
 								"s3:List*"
 							],
 							"Effect": "Allow",
-							"Resource": [{"Fn::GetAtt" : ["myS3Bucket","Arn"]}]
+							"Resource": [{"Fn::Join": [ "", [{"Fn::GetAtt" : ["myS3Bucket","Arn"]},"/*"]]}]
 						}
 					]
 				},
@@ -82,7 +82,7 @@
 							"Action": [
 								"s3:PutObject"
 							],
-							"Resource": [{"Fn::GetAtt" : ["myS3Bucket","Arn"]}]
+							"Resource": [ {"Fn::Join": [ "", [{"Fn::GetAtt" : ["myS3Bucket","Arn"]},"/*"]]}]
 						}
 					]
 				},

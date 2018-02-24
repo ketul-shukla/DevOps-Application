@@ -40,13 +40,13 @@ deploy:
     on:
       branch: $branch
 
-# - provider: codedeploy
-#   access_key_id: $access_key_id
-#   secret_access_key: $secret_access_key
-#   bucket: $s3_bucket
-#   key: csye6225-web-app-$TRAVIS_JOB_NUMBER.zip
-#   application: $code_deploy_application
-#   deployment_group: $code_deploy_application
+  - provider: codedeploy
+    access_key_id: $access_key_id
+    secret_access_key: $secret_access_key
+    bucket: $s3_bucket
+    key: csye6225-web-app-$TRAVIS_JOB_NUMBER.zip
+    application: $code_deploy_application
+    deployment_group: $code_deploy_application
    
 notifications:
   email:

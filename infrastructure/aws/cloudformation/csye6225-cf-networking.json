@@ -141,35 +141,33 @@
 											"FromPort": "443",
 											"ToPort": "443",
 											"CidrIp": "0.0.0.0/0"
+										}]
+									}
+								},
+								"myDBSecurityGroup": {
+									"Type": "AWS::EC2::SecurityGroup",
+									"Properties": {
+										"GroupDescription" : "csye6225-rds",
+										"VpcId": {
+											"Ref": "myVPC"
 										},
-										{
+										"SecurityGroupIngress": [{
 											"IpProtocol": "tcp",
-											"FromPort": "3306",
 											"ToPort": "3306",
-											"CidrIp": "0.0.0.0/0"
-										}
-									]
-								}
-							},
-							"myRDSSecurityGroup": {
-								"Type": "AWS::RDS::DBSecurityGroup",
-								"Properties": {
-									"GroupDescription" : "csye6225-rds",
-									"EC2VpcId" : { "Ref" : "myVPC" },
-									"DBSecurityGroupIngress": [
-										{"EC2SecurityGroupId": { "Fn::GetAtt" : [ "myEC2SecurityGroup" , "GroupId" ]}}
-									]
-								}
-							},
-							"myDBSubnetGroup": {
-								"Type": "AWS::RDS::DBSubnetGroup",
-								"Properties": {
-									"DBSubnetGroupDescription" : "description",
-									"SubnetIds": [
-										{"Ref": "myWebServerSubnet"},
-										{"Ref": "myDBServerSubnet"}
-									]
+											"FromPort": "3306",
+											"SourceSecurityGroupId": {"Ref" : "myEC2SecurityGroup"}
+										}]
+									}
+								},
+								"myDBSubnetGroup": {
+									"Type": "AWS::RDS::DBSubnetGroup",
+									"Properties": {
+										"DBSubnetGroupDescription" : "description",
+										"SubnetIds": [
+											{"Ref": "myWebServerSubnet"},
+											{"Ref": "myDBServerSubnet"}
+										]
+									}
 								}
 							}
 						}
-					}
