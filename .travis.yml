@@ -18,8 +18,8 @@ after_success:
   - pwd
   - ls -al
   - mkdir codedeploy_artifact
-  - zip -r csye6225-web-app-$TRAVIS_JOB_NUMBER.zip webapp/build/libs/ROOT.war infrastructure/aws/codedeploy/
-  - mv csye6225-webapp-app-$TRAVIS_JOB_NUMBER.zip codedeploy_artifact/
+  - zip -r csye6225-web-app.zip webapp/build/libs/ROOT.war infrastructure/aws/codedeploy/
+  - mv csye6225-webapp-app.zip codedeploy_artifact/
   - ls -al
   - pwd
   - cd codedeploy_artifact
