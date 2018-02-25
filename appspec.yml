@@ -2,6 +2,12 @@ version: 0.0
 os: linux
 
 files:
+  - source: ./afterInstall.sh
+    detination: /home/ubuntu
+  - source: ./applicationStart.sh
+    detination: /home/ubuntu
+  - source: ./validateService.sh
+    detination: /home/ubuntu
   - source: ./webapp/build/libs/ROOT.war
     destination: /var/lib/tomcat8/webapps
 
