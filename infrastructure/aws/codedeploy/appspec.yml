@@ -2,7 +2,13 @@ version: 0.0
 os: linux
 
 files:
-  - source: ./infrastructure/codedeploy/appspec.yml
+  - source: ./infrastructure/aws/codedeploy/appspec.yml
+    destination: /home/ubuntu
+  - source: ./infrastructure/aws/codedeploy/afterInstall.sh
+    destination: /home/ubuntu
+  - source: ./infrastructure/aws/codedeploy/applicationStart.sh
+    destination: /home/ubuntu
+  - source: ./infrastructure/aws/codedeploy/validateService.sh
     destination: /home/ubuntu
   - source: ./webapp/build/libs/ROOT.war
     destination: /var/lib/tomcat8/webapps
@@ -20,3 +26,5 @@ hooks:
    - location: ./validateService.sh
      timeout: 180
      runas: ubuntu
+
+     /infrastructure/aws/codedeploy
