@@ -18,7 +18,9 @@ after_success:
   - pwd
   - ls -al
   - mkdir codedeploy_artifact
-  - zip -r csye6225-web-app-$TRAVIS_JOB_NUMBER.zip webapp/build/libs/ROOT.war app*.yml *.sh
+  - cp infrastructure/aws/codedeploy/*.sh .
+  - cp infrastructure/aws/codedeploy/*.yml .
+  - zip -r csye6225-web-app-$TRAVIS_JOB_NUMBER.zip webapp/build/libs/ROOT.war *.yml *.sh
   - mv csye6225-web-app-$TRAVIS_JOB_NUMBER.zip codedeploy_artifact/
   - ls -al
   - pwd
