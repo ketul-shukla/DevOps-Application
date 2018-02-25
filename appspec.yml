@@ -3,11 +3,11 @@ os: linux
 
 files:
   - source: ./afterInstall.sh
-    detination: /home/ubuntu
+    destination: /home/ubuntu
   - source: ./applicationStart.sh
-    detination: /home/ubuntu
+    destination: /home/ubuntu
   - source: ./validateService.sh
-    detination: /home/ubuntu
+    destination: /home/ubuntu
   - source: ./webapp/build/libs/ROOT.war
     destination: /var/lib/tomcat8/webapps
 
