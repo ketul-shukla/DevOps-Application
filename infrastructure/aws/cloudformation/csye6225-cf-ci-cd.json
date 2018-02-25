@@ -43,6 +43,9 @@
 		"Ec2TagFiltersType": {
 			"Type" : "String"
 		},
+		"CodeDeployConfig": {
+			"Type" : "String"
+		},
 		"IamInstanceProfileName": {
 			"Type" : "String"
 		}
@@ -200,7 +203,7 @@
 							"Value" : {"Ref" : "Ec2TagFiltersValue"},
 							"Type": {"Ref" : "Ec2TagFiltersType"}
 							}],
-							"DeploymentConfigName" : "CodeDeployDefault.OneAtATime",
+							"DeploymentConfigName" : {"Ref" : "CodeDeployConfig"},
 							"ServiceRoleArn" : {"Fn::GetAtt" : ["myCodeDeployServiceRole","Arn"]}
 						}
 					},

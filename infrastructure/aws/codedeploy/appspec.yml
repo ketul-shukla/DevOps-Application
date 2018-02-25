@@ -2,6 +2,8 @@ version: 0.0
 os: linux
 
 files:
+  - source: ./infrastructure/codedeploy/appspec.yml
+    destination: /home/ubuntu
   - source: ./webapp/build/libs/ROOT.war
     destination: /var/lib/tomcat8/webapps
 
