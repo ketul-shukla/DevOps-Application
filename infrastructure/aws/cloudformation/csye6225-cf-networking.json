@@ -117,6 +117,18 @@
 										}
 									}
 								},
+								"myDBServerSubnet2" : {
+									"Type" : "AWS::EC2::Subnet",
+									"Properties" : {
+										"VpcId" : { "Ref" : "myVPC" },
+										"CidrBlock" : "10.0.2.0/24",
+										"AvailabilityZone" : "us-east-1c",
+										"Tags": [{
+											"Key": "Name",
+											"Value": {"Fn::Join": [ "", [{ "Ref" : "AWS::StackName" },"-csye6225-subnet2-for-dbservers"]] }
+										}]
+									}
+								},
 								"myEC2SecurityGroup": {
 									"Type": "AWS::EC2::SecurityGroup",
 									"Properties": {
@@ -164,8 +176,8 @@
 									"Properties": {
 										"DBSubnetGroupDescription" : "description",
 										"SubnetIds": [
-											{"Ref": "myWebServerSubnet"},
-											{"Ref": "myDBServerSubnet"}
+											{"Ref": "myDBServerSubnet"},
+											{"Ref": "myDBServerSubnet2"}
 										]
 									}
 								}

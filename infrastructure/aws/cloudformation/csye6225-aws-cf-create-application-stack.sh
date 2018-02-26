@@ -10,7 +10,7 @@ resourceStackName=$2
 
 vpcId=$(aws ec2 describe-vpcs --filters Name=tag:Name,Values=$resourceStackName-csye6225-vpc --query 'Vpcs[].VpcId' --output text)
 
-securityGroupId=$(aws ec2 describe-security-groups --filters Name=vpc-id,Values=$vpcId --query 'SecurityGroups[0].GroupId' --output text)
+securityGroupId=$(aws ec2 describe-security-groups --filters Name=vpc-id,Values=$vpcId Name=description,Values=csye6225-webapp --query 'SecurityGroups[].GroupId' --output text)
 
 subnetId=$(aws ec2 describe-subnets --filters Name=tag:Name,Values="$resourceStackName-csye6225-subnet-for-webservers" --query 'Subnets[].SubnetId' --output text)
 
