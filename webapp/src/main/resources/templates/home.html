@@ -1,11 +1,11 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
+<!--<@thymesVar id="picUrl" type="String">-->
     <div th:replace="fragments/header :: header"/>
     <body>
         <div th:replace="fragments/navigation :: navigation"/>
         <!-- Page Content -->
         <!--<div th:replace="fragments/profile :: profile"/>-->
-        <img th:src="@{/home/anil/csye6225/dev/csye6225-spring2018/webapp/build/libs/exploded/ROOT.war/img/default.jpg}"/>
         <div class="container">
 
             <div>
@@ -13,14 +13,17 @@
                 <a href="/logout">Logout</a>
             </div>
             <p>
-                <h2>
-                    <span th:text="${date}"></span>
-                </h2>
+            <h2>
+                <span th:text="${date}"></span>
+            </h2>
             </p>
-            <img src="${image}" alt="abc"/>
+            <img th:src="@{${image}}" />
+            <form method="post" enctype="multipart/form-data" action="/deletePicture">
+                <button type="submit">Remove Image</button>
+            </form>
             <form method="post" enctype="multipart/form-data" action="/uploadPicture">
                 <div>
-                    <label>File Upload: </label>
+                    <label>Image Upload: </label>
                     <input type="file" placeholder="Enter Select image" name="imageFile" required=""/>
                 </div>
                 <div>
