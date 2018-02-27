@@ -45,9 +45,11 @@ dependencies {
     compile('org.springframework.boot:spring-boot-starter-web')
     compile('org.springframework.boot:spring-boot-starter-data-jpa')
     compile('org.springframework.boot:spring-boot-starter-security')
-    compile ('org.springframework.boot:spring-boot-starter-thymeleaf')
+    compile('org.springframework.boot:spring-boot-starter-thymeleaf')
 
-    compile ('junit:junit:4.12')
+    compile group: 'com.amazonaws', name: 'aws-java-sdk', version: '1.11.277'
+
+    compile('junit:junit:4.12')
     compile('com.h2database:h2:+')
     compile('mysql:mysql-connector-java')
 

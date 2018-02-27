@@ -117,6 +117,18 @@
 										}
 									}
 								},
+								"myDBServerSubnet2" : {
+									"Type" : "AWS::EC2::Subnet",
+									"Properties" : {
+										"VpcId" : { "Ref" : "myVPC" },
+										"CidrBlock" : "10.0.2.0/24",
+										"AvailabilityZone" : "us-east-1c",
+										"Tags": [{
+											"Key": "Name",
+											"Value": {"Fn::Join": [ "", [{ "Ref" : "AWS::StackName" },"-csye6225-subnet2-for-dbservers"]] }
+										}]
+									}
+								},
 								"myEC2SecurityGroup": {
 									"Type": "AWS::EC2::SecurityGroup",
 									"Properties": {
@@ -141,35 +153,33 @@
 											"FromPort": "443",
 											"ToPort": "443",
 											"CidrIp": "0.0.0.0/0"
+										}]
+									}
+								},
+								"myDBSecurityGroup": {
+									"Type": "AWS::EC2::SecurityGroup",
+									"Properties": {
+										"GroupDescription" : "csye6225-rds",
+										"VpcId": {
+											"Ref": "myVPC"
 										},
-										{
+										"SecurityGroupIngress": [{
 											"IpProtocol": "tcp",
-											"FromPort": "3306",
 											"ToPort": "3306",
-											"CidrIp": "0.0.0.0/0"
-										}
-									]
-								}
-							},
-							"myRDSSecurityGroup": {
-								"Type": "AWS::RDS::DBSecurityGroup",
-								"Properties": {
-									"GroupDescription" : "csye6225-rds",
-									"EC2VpcId" : { "Ref" : "myVPC" },
-									"DBSecurityGroupIngress": [
-										{"EC2SecurityGroupId": { "Fn::GetAtt" : [ "myEC2SecurityGroup" , "GroupId" ]}}
-									]
-								}
-							},
-							"myDBSubnetGroup": {
-								"Type": "AWS::RDS::DBSubnetGroup",
-								"Properties": {
-									"DBSubnetGroupDescription" : "description",
-									"SubnetIds": [
-										{"Ref": "myWebServerSubnet"},
-										{"Ref": "myDBServerSubnet"}
-									]
+											"FromPort": "3306",
+											"SourceSecurityGroupId": {"Ref" : "myEC2SecurityGroup"}
+										}]
+									}
+								},
+								"myDBSubnetGroup": {
+									"Type": "AWS::RDS::DBSubnetGroup",
+									"Properties": {
+										"DBSubnetGroupDescription" : "description",
+										"SubnetIds": [
+											{"Ref": "myDBServerSubnet"},
+											{"Ref": "myDBServerSubnet2"}
+										]
+									}
 								}
 							}
 						}
-					}

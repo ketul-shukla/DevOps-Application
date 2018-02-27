@@ -43,6 +43,9 @@
 		"Ec2TagFiltersType": {
 			"Type" : "String"
 		},
+		"CodeDeployConfig": {
+			"Type" : "String"
+		},
 		"IamInstanceProfileName": {
 			"Type" : "String"
 		}
@@ -61,7 +64,7 @@
 								"s3:List*"
 							],
 							"Effect": "Allow",
-							"Resource": [{"Fn::GetAtt" : ["myS3Bucket","Arn"]}]
+							"Resource": [{"Fn::Join": [ "", [{"Fn::GetAtt" : ["myS3Bucket","Arn"]},"/*"]]}]
 						}
 					]
 				},
@@ -82,7 +85,7 @@
 							"Action": [
 								"s3:PutObject"
 							],
-							"Resource": [{"Fn::GetAtt" : ["myS3Bucket","Arn"]}]
+							"Resource": [ {"Fn::Join": [ "", [{"Fn::GetAtt" : ["myS3Bucket","Arn"]},"/*"]]}]
 						}
 					]
 				},
@@ -186,15 +189,6 @@
 						"ComputePlatform" : {"Ref" : "CodeDeployApplicationComputePlatform"}
 					}
 				},
-				"myCodeDeployConfig" : {
-					"Type" : "AWS::CodeDeploy::DeploymentConfig",
-					"Properties" : {
-						"MinimumHealthyHosts" : {
-							"Type" : "FLEET_PERCENT",
-							"Value" : "99"
-						}
-					}
-				},
 				"myCodeDeploymentGroup" : {
 					"Type" : "AWS::CodeDeploy::DeploymentGroup",
 					"Properties" : {
@@ -209,7 +203,7 @@
 							"Value" : {"Ref" : "Ec2TagFiltersValue"},
 							"Type": {"Ref" : "Ec2TagFiltersType"}
 							}],
-							"DeploymentConfigName" : {"Ref" : "myCodeDeployConfig"},
+							"DeploymentConfigName" : {"Ref" : "CodeDeployConfig"},
 							"ServiceRoleArn" : {"Fn::GetAtt" : ["myCodeDeployServiceRole","Arn"]}
 						}
 					},
