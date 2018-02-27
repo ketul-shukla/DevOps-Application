@@ -23,6 +23,7 @@ import java.nio.file.Paths;
 import java.util.Map;
 
 @Controller
+@RequestMapping(value="/myApp")
 public class ProfileController {
 
     @Autowired

@@ -126,7 +126,7 @@
 										    [
 										      "sudo echo JAVA_OPTS=\\\"\\${JAVA_OPTS} -Dspring.datasource.url=jdbc:mysql://",
 										      {"Fn::GetAtt": ["myRDSDBInstance","Endpoint.Address"]},
-										      ":3306/csye6225\\\"\\ss >> /etc/default/tomcat8 \n"
+										      ":3306/csye6225\\\"\\ >> /etc/default/tomcat8 \n"
 										    ]
 										  ]
 										},
