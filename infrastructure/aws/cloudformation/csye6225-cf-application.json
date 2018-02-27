@@ -118,25 +118,20 @@
                     "sudo service codedeploy-agent start \n",
                     "sudo apt-get install tomcat8 -y \n",
 										"sudo chmod o+w /etc/default/tomcat8 \n",
-										"sudo echo JAVA_OPTS=\\\"\\${JAVA_OPTS} -Dspring.profiles.active=aws\"\\ >> /etc/default/tomcat8 \n",
-										"sudo echo JAVA_OPTS=\\\"\\${JAVA_OPTS} -Dspring.datasource.username=csye6225master -Dspring.datasource.password=csye6225password\"\\ >> /etc/default/tomcat8 \n",
+										"sudo echo JAVA_OPTS=\\\"\\${JAVA_OPTS} -Dspring.profiles.active=aws\\\"\\ >> /etc/default/tomcat8 \n",
+										"sudo echo JAVA_OPTS=\\\"\\${JAVA_OPTS} -Dspring.datasource.username=csye6225master -Dspring.datasource.password=csye6225password\\\"\\ >> /etc/default/tomcat8 \n",
 										{
-                      "Fn::Join": [
-                      	"",
-                        [
-                          "sudo echo JAVA_OPTS=\\\"\\${JAVA_OPTS} -Dspring.datasource.url=jdbc:mysql://",
-                            {
-                              "Fn::GetAtt": [
-                                              "myRDSDBInstance",
-                                              "Endpoint.Address"
-                                            ]
-                            },
-                            ":3306/csye6225\"\\ss >> /etc/default/tomcat8 \n"
-                        ]
-                    	]
-                    },
+										  "Fn::Join": [
+										    "",
+										    [
+										      "sudo echo JAVA_OPTS=\\\"\\${JAVA_OPTS} -Dspring.datasource.url=jdbc:mysql://",
+										      {"Fn::GetAtt": ["myRDSDBInstance","Endpoint.Address"]},
+										      ":3306/csye6225\\\"\\ss >> /etc/default/tomcat8 \n"
+										    ]
+										  ]
+										},
 										"sudo service tomcat8 restart \n"
-                  ]
+									]
                 ]
               }
             }

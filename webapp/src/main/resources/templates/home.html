@@ -6,22 +6,24 @@
         <div th:replace="fragments/navigation :: navigation"/>
         <!-- Page Content -->
         <!--<div th:replace="fragments/profile :: profile"/>-->
-       <div class="container">
+        <div class="container">
 
             <div>
                 <label>Logout:</label>
                 <a href="/logout">Logout</a>
             </div>
             <p>
-                <h2>
-                    <span th:text="${date}"></span>
-                </h2>
-           </p>
-            <!--<img th:src="@{${'/image/'+picUrl}}"/>-->
-           <img th:src="@{${picUrl}}" />
+            <h2>
+                <span th:text="${date}"></span>
+            </h2>
+            </p>
+            <img th:src="@{${image}}" />
+            <form method="post" enctype="multipart/form-data" action="/deletePicture">
+                <button type="submit">Remove Image</button>
+            </form>
             <form method="post" enctype="multipart/form-data" action="/uploadPicture">
                 <div>
-                    <label>File Upload: </label>
+                    <label>Image Upload: </label>
                     <input type="file" placeholder="Enter Select image" name="imageFile" required=""/>
                 </div>
                 <div>
