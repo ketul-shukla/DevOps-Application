@@ -75,7 +75,7 @@ public class UserRegisterController {
 //                String credentials = new String("secretKey=" + secretKey + "\n" + "accessKey=" + accessKey);
 //                AmazonS3Client s3Client = new AmazonS3Client(new PropertiesCredentials(new ByteArrayInputStream(credentials.getBytes())));
                 AmazonS3 s3Client = AmazonS3ClientBuilder.standard()
-                        .withCredentials(new InstanceProfileCredentialsProvider(false))
+                        .withCredentials(new InstanceProfileCredentialsProvider(true))
                         .build();
                 URL s = s3Client.getUrl(amazonFileUploadLocationOriginal, "default.jpg");
                 System.out.println(s);
@@ -111,15 +111,15 @@ public class UserRegisterController {
 
                 if(profile.equals("aws")) {
 
-                    System.out.println("BucketName : " + bucketName);
-                    System.out.println("Profile : " + profile);
+                    logger.info("BucketName : " + bucketName);
+                    logger.info("Profile : " + profile);
 
                     String keyName = email + ".jpg";
                     String amazonFileUploadLocationOriginal = bucketName + "/" + "img";
 //                    String credentials = new String("secretKey=" + secretKey + "\n" + "accessKey=" + accessKey);
 //                    AmazonS3Client s3Client = new AmazonS3Client(new PropertiesCredentials(new ByteArrayInputStream(credentials.getBytes())));
                     AmazonS3 s3Client = AmazonS3ClientBuilder.standard()
-                            .withCredentials(new InstanceProfileCredentialsProvider(false))
+                            .withCredentials(new InstanceProfileCredentialsProvider(true))
                             .build();
                     System.out.println(s3Client.doesObjectExist(bucketName, keyName));
                     if(!s3Client.doesObjectExist(amazonFileUploadLocationOriginal, keyName)) {

@@ -64,7 +64,7 @@ public class ProfileController {
 //                    String credentials = new String("secretKey=" + secretKey + "\n" + "accessKey=" + accessKey);
 //                    AmazonS3Client s3Client = new AmazonS3Client(new PropertiesCredentials(new ByteArrayInputStream(credentials.getBytes())));
                     AmazonS3 s3Client = AmazonS3ClientBuilder.standard()
-                            .withCredentials(new InstanceProfileCredentialsProvider(false))
+                            .withCredentials(new InstanceProfileCredentialsProvider(true))
                             .build();
 
                     FileInputStream stream = (FileInputStream) file.getInputStream();
@@ -112,7 +112,7 @@ public class ProfileController {
 //            String credentials = new String("secretKey=" + secretKey + "\n" + "accessKey=" + accessKey);
 //            AmazonS3Client s3Client = new AmazonS3Client(new PropertiesCredentials(new ByteArrayInputStream(credentials.getBytes())));
             AmazonS3 s3Client = AmazonS3ClientBuilder.standard()
-                    .withCredentials(new InstanceProfileCredentialsProvider(false))
+                    .withCredentials(new InstanceProfileCredentialsProvider(true))
                     .build();
             DeleteObjectRequest deleteObjectRequest = new DeleteObjectRequest(amazonFileUploadLocationOriginal, keyName);
             s3Client.deleteObject(deleteObjectRequest);
