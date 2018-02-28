@@ -1,7 +1,10 @@
 package com.csye6225.spring2018.controller;
 
+import com.amazonaws.auth.InstanceProfileCredentialsProvider;
 import com.amazonaws.auth.PropertiesCredentials;
+import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.*;
 import com.csye6225.spring2018.user.User;
 import com.csye6225.spring2018.user.UserRepository;
@@ -28,17 +31,17 @@ public class ProfileController {
     @Autowired
     private UserRepository userRepository;
 
-    @Value("${server}")
-    String server;
-
-    @Value("${accessKey}")
-    String accessKey;
-
-    @Value("${secretKey}")
-    String secretKey;
+//    @Value("${accessKey}")
+//    String accessKey;
+//
+//    @Value("${secretKey}")
+//    String secretKey;
 
     @Value("${bucketName}")
     String bucketName;
+
+    @Value("${spring.profiles.active}")
+    String profile;
 
     @RequestMapping(value = "/uploadPicture", method = RequestMethod.POST)
     public String addUploadPicture(@RequestParam("imageFile") MultipartFile file, @RequestParam("aboutMe") String aboutMe, Map<String, Object> model, HttpServletRequest request) {
@@ -54,13 +57,15 @@ public class ProfileController {
                     throw new InvalidObjectException("Invalid image file");
                 }
 
-                System.out.println(server);
-                if(server.equals("s3bucket")) {
+                if(profile.equals("aws")) {
                     String keyName = email + ".jpg";
                     String amazonFileUploadLocationOriginal = bucketName + "/" + "img";
 
-                    String credentials = new String("secretKey=" + secretKey + "\n" + "accessKey=" + accessKey);
-                    AmazonS3Client s3Client = new AmazonS3Client(new PropertiesCredentials(new ByteArrayInputStream(credentials.getBytes())));
+//                    String credentials = new String("secretKey=" + secretKey + "\n" + "accessKey=" + accessKey);
+//                    AmazonS3Client s3Client = new AmazonS3Client(new PropertiesCredentials(new ByteArrayInputStream(credentials.getBytes())));
+                    AmazonS3 s3Client = AmazonS3ClientBuilder.standard()
+                            .withCredentials(new InstanceProfileCredentialsProvider(false))
+                            .build();
 
                     FileInputStream stream = (FileInputStream) file.getInputStream();
                     ObjectMetadata objectMetadata = new ObjectMetadata();
@@ -99,13 +104,16 @@ public class ProfileController {
         int index = email.indexOf('@');
         email = email.substring(0, index);
 
-        if(server.equals("s3bucket")) {
+        if(profile.equals("aws")) {
             String keyName = email + ".jpg";
 
             String amazonFileUploadLocationOriginal = bucketName + "/" + "img";
 
-            String credentials = new String("secretKey=" + secretKey + "\n" + "accessKey=" + accessKey);
-            AmazonS3Client s3Client = new AmazonS3Client(new PropertiesCredentials(new ByteArrayInputStream(credentials.getBytes())));
+//            String credentials = new String("secretKey=" + secretKey + "\n" + "accessKey=" + accessKey);
+//            AmazonS3Client s3Client = new AmazonS3Client(new PropertiesCredentials(new ByteArrayInputStream(credentials.getBytes())));
+            AmazonS3 s3Client = AmazonS3ClientBuilder.standard()
+                    .withCredentials(new InstanceProfileCredentialsProvider(false))
+                    .build();
             DeleteObjectRequest deleteObjectRequest = new DeleteObjectRequest(amazonFileUploadLocationOriginal, keyName);
             s3Client.deleteObject(deleteObjectRequest);
             URL imageUrl = s3Client.getUrl(amazonFileUploadLocationOriginal, "default.jpg");
