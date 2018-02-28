@@ -75,6 +75,9 @@
 		},
 		"DBSubnetGroup": {
 			"Type" : "String"
+		},
+		"DBSecurityGroupId": {
+			"Type" : "String"
 		}
 	},
 	"Resources": {
@@ -126,7 +129,7 @@
 										    [
 										      "sudo echo JAVA_OPTS=\\\"\\${JAVA_OPTS} -Dspring.datasource.url=jdbc:mysql://",
 										      {"Fn::GetAtt": ["myRDSDBInstance","Endpoint.Address"]},
-										      ":3306/csye6225\\\"\\ss >> /etc/default/tomcat8 \n"
+										      ":3306/csye6225\\\"\\ >> /etc/default/tomcat8 \n"
 										    ]
 										  ]
 										},
@@ -181,7 +184,8 @@
 						"MasterUserPassword" : {"Ref" : "DBPassword"},
 						"DBSubnetGroupName" : {"Ref" : "DBSubnetGroup"},
 						"PubliclyAccessible": "false",
-						"DBName" : { "Ref" : "DBName" }
+						"DBName" : { "Ref" : "DBName" },
+						"VPCSecurityGroups" : [{"Ref" : "DBSecurityGroupId"}]
 					}
 				}
 			}

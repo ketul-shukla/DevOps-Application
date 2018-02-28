@@ -18,3 +18,11 @@ hooks:
    - location: ./validateService.sh
      timeout: 180
      runas: ubuntu
+  ApplicationStop:
+   - location: ./applicationStop.sh
+     timeout: 180
+     runas: ubuntu
+  BeforeInstall:
+   - location: ./beforeInstall.sh
+     timeout: 180
+     runas: ubuntu
