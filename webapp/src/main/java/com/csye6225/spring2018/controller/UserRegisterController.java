@@ -27,6 +27,7 @@ import java.util.Date;
 import java.util.Map;
 
 @Controller
+@RequestMapping(value = "myApp")
 public class UserRegisterController {
 
     private final static Logger logger = LoggerFactory.getLogger(UserRegisterController.class);
@@ -47,6 +48,11 @@ public class UserRegisterController {
 
     @Value("${bucketName}")
     String bucketName;
+
+    @RequestMapping(value = "/myApp")
+    public String landingPage(){
+        return "index";
+    }
 
     @RequestMapping(value = "/createAccount", method = RequestMethod.GET)
     public String createNewAccount() {
