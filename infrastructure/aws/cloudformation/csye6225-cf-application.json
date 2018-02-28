@@ -75,6 +75,9 @@
 		},
 		"DBSubnetGroup": {
 			"Type" : "String"
+		},
+		"DBSecurityGroupId": {
+			"Type" : "String"
 		}
 	},
 	"Resources": {
@@ -181,7 +184,8 @@
 						"MasterUserPassword" : {"Ref" : "DBPassword"},
 						"DBSubnetGroupName" : {"Ref" : "DBSubnetGroup"},
 						"PubliclyAccessible": "false",
-						"DBName" : { "Ref" : "DBName" }
+						"DBName" : { "Ref" : "DBName" },
+						"VPCSecurityGroups" : [{"Ref" : "DBSecurityGroupId"}]
 					}
 				}
 			}
