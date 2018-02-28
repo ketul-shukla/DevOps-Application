@@ -55,10 +55,9 @@ public class ProfileController {
                     String keyName = email + ".jpg";
                     String amazonFileUploadLocationOriginal = bucketName + "/" + "img";
 
-//                   AmazonS3 s3Client = AmazonS3ClientBuilder.standard()
-//                            .withCredentials(new InstanceProfileCredentialsProvider(true))
-//                            .build();
-                    AmazonS3 s3Client = AmazonS3ClientBuilder.defaultClient();
+                   AmazonS3 s3Client = AmazonS3ClientBuilder.standard()
+                            .withCredentials(new InstanceProfileCredentialsProvider(false))
+                            .build();
 
                     FileInputStream stream = (FileInputStream) file.getInputStream();
                     ObjectMetadata objectMetadata = new ObjectMetadata();
@@ -102,10 +101,9 @@ public class ProfileController {
 
             String amazonFileUploadLocationOriginal = bucketName + "/" + "img";
 
-//          AmazonS3 s3Client = AmazonS3ClientBuilder.standard()
-//                    .withCredentials(new InstanceProfileCredentialsProvider(true))
-//                    .build();
-            AmazonS3 s3Client = AmazonS3ClientBuilder.defaultClient();
+          AmazonS3 s3Client = AmazonS3ClientBuilder.standard()
+                    .withCredentials(new InstanceProfileCredentialsProvider(false))
+                    .build();
             DeleteObjectRequest deleteObjectRequest = new DeleteObjectRequest(amazonFileUploadLocationOriginal, keyName);
             s3Client.deleteObject(deleteObjectRequest);
             URL imageUrl = s3Client.getUrl(amazonFileUploadLocationOriginal, "default.jpg");

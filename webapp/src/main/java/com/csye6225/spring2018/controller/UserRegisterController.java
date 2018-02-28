@@ -66,10 +66,9 @@ public class UserRegisterController {
             session.setAttribute("emailID", emailAddress);
             if(profile.equals("aws")) {
                 String amazonFileUploadLocationOriginal = bucketName + "/" + "img";
-//              AmazonS3 s3Client = AmazonS3ClientBuilder.standard()
-//                        .withCredentials(new InstanceProfileCredentialsProvider(true))
-//                        .build();
-                AmazonS3 s3Client = AmazonS3ClientBuilder.defaultClient();
+              AmazonS3 s3Client = AmazonS3ClientBuilder.standard()
+                        .withCredentials(new InstanceProfileCredentialsProvider(false))
+                        .build();
                 URL s = s3Client.getUrl(amazonFileUploadLocationOriginal, "default.jpg");
                 System.out.println(s);
                 model.put("image", s);
@@ -109,10 +108,9 @@ public class UserRegisterController {
 
                     String keyName = email + ".jpg";
                     String amazonFileUploadLocationOriginal = bucketName + "/" + "img";
-//                  AmazonS3 s3Client = AmazonS3ClientBuilder.standard()
-//                            .withCredentials(new InstanceProfileCredentialsProvider(true))
-//                            .build();
-                    AmazonS3 s3Client = AmazonS3ClientBuilder.defaultClient();
+                  AmazonS3 s3Client = AmazonS3ClientBuilder.standard()
+                            .withCredentials(new InstanceProfileCredentialsProvider(false))
+                            .build();
                     System.out.println(s3Client.doesObjectExist(bucketName, keyName));
                     if(!s3Client.doesObjectExist(amazonFileUploadLocationOriginal, keyName)) {
                         URL imageUrl = s3Client.getUrl(amazonFileUploadLocationOriginal, "default.jpg");
