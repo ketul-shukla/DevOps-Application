@@ -31,13 +31,7 @@ public class ProfileController {
     @Autowired
     private UserRepository userRepository;
 
-//    @Value("${accessKey}")
-//    String accessKey;
-//
-//    @Value("${secretKey}")
-//    String secretKey;
-
-    @Value("${bucketName}")
+    @Value("${aws.cloudformation.bucket.name}")
     String bucketName;
 
     @Value("${spring.profiles.active}")
@@ -61,11 +55,10 @@ public class ProfileController {
                     String keyName = email + ".jpg";
                     String amazonFileUploadLocationOriginal = bucketName + "/" + "img";
 
-//                    String credentials = new String("secretKey=" + secretKey + "\n" + "accessKey=" + accessKey);
-//                    AmazonS3Client s3Client = new AmazonS3Client(new PropertiesCredentials(new ByteArrayInputStream(credentials.getBytes())));
-                    AmazonS3 s3Client = AmazonS3ClientBuilder.standard()
-                            .withCredentials(new InstanceProfileCredentialsProvider(true))
-                            .build();
+//                   AmazonS3 s3Client = AmazonS3ClientBuilder.standard()
+//                            .withCredentials(new InstanceProfileCredentialsProvider(true))
+//                            .build();
+                    AmazonS3 s3Client = AmazonS3ClientBuilder.defaultClient();
 
                     FileInputStream stream = (FileInputStream) file.getInputStream();
                     ObjectMetadata objectMetadata = new ObjectMetadata();
@@ -109,11 +102,10 @@ public class ProfileController {
 
             String amazonFileUploadLocationOriginal = bucketName + "/" + "img";
 
-//            String credentials = new String("secretKey=" + secretKey + "\n" + "accessKey=" + accessKey);
-//            AmazonS3Client s3Client = new AmazonS3Client(new PropertiesCredentials(new ByteArrayInputStream(credentials.getBytes())));
-            AmazonS3 s3Client = AmazonS3ClientBuilder.standard()
-                    .withCredentials(new InstanceProfileCredentialsProvider(true))
-                    .build();
+//          AmazonS3 s3Client = AmazonS3ClientBuilder.standard()
+//                    .withCredentials(new InstanceProfileCredentialsProvider(true))
+//                    .build();
+            AmazonS3 s3Client = AmazonS3ClientBuilder.defaultClient();
             DeleteObjectRequest deleteObjectRequest = new DeleteObjectRequest(amazonFileUploadLocationOriginal, keyName);
             s3Client.deleteObject(deleteObjectRequest);
             URL imageUrl = s3Client.getUrl(amazonFileUploadLocationOriginal, "default.jpg");

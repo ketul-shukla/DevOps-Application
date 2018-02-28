@@ -39,13 +39,7 @@ public class UserRegisterController {
     @Autowired
     private UserRepository userRepository;
 
-//    @Value("${accessKey}")
-//    String accessKey;
-//
-//    @Value("${secretKey}")
-//    String secretKey;
-
-    @Value("${bucketName}")
+    @Value("${aws.cloudformation.bucket.name}")
     String bucketName;
 
     @Value("${spring.profiles.active}")
@@ -72,11 +66,10 @@ public class UserRegisterController {
             session.setAttribute("emailID", emailAddress);
             if(profile.equals("aws")) {
                 String amazonFileUploadLocationOriginal = bucketName + "/" + "img";
-//                String credentials = new String("secretKey=" + secretKey + "\n" + "accessKey=" + accessKey);
-//                AmazonS3Client s3Client = new AmazonS3Client(new PropertiesCredentials(new ByteArrayInputStream(credentials.getBytes())));
-                AmazonS3 s3Client = AmazonS3ClientBuilder.standard()
-                        .withCredentials(new InstanceProfileCredentialsProvider(true))
-                        .build();
+//              AmazonS3 s3Client = AmazonS3ClientBuilder.standard()
+//                        .withCredentials(new InstanceProfileCredentialsProvider(true))
+//                        .build();
+                AmazonS3 s3Client = AmazonS3ClientBuilder.defaultClient();
                 URL s = s3Client.getUrl(amazonFileUploadLocationOriginal, "default.jpg");
                 System.out.println(s);
                 model.put("image", s);
@@ -116,11 +109,10 @@ public class UserRegisterController {
 
                     String keyName = email + ".jpg";
                     String amazonFileUploadLocationOriginal = bucketName + "/" + "img";
-//                    String credentials = new String("secretKey=" + secretKey + "\n" + "accessKey=" + accessKey);
-//                    AmazonS3Client s3Client = new AmazonS3Client(new PropertiesCredentials(new ByteArrayInputStream(credentials.getBytes())));
-                    AmazonS3 s3Client = AmazonS3ClientBuilder.standard()
-                            .withCredentials(new InstanceProfileCredentialsProvider(true))
-                            .build();
+//                  AmazonS3 s3Client = AmazonS3ClientBuilder.standard()
+//                            .withCredentials(new InstanceProfileCredentialsProvider(true))
+//                            .build();
+                    AmazonS3 s3Client = AmazonS3ClientBuilder.defaultClient();
                     System.out.println(s3Client.doesObjectExist(bucketName, keyName));
                     if(!s3Client.doesObjectExist(amazonFileUploadLocationOriginal, keyName)) {
                         URL imageUrl = s3Client.getUrl(amazonFileUploadLocationOriginal, "default.jpg");
