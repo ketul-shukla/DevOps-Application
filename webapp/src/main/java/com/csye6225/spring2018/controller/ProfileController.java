@@ -1,16 +1,13 @@
 package com.csye6225.spring2018.controller;
 
 import com.amazonaws.auth.InstanceProfileCredentialsProvider;
-import com.amazonaws.auth.PropertiesCredentials;
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.*;
 import com.csye6225.spring2018.user.User;
 import com.csye6225.spring2018.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -43,6 +40,9 @@ public class ProfileController {
             try {
                 String fileExtension = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf(".") + 1);
                 String email = request.getSession().getAttribute("emailID").toString();
+                model.put("email", email);
+                User findUser = userRepository.findByEmailID(email);
+                model.put("aboutMe", findUser.getAboutMe());
                 if (fileExtension.equalsIgnoreCase("jpeg") || fileExtension.equalsIgnoreCase("jpg") || fileExtension.equalsIgnoreCase("png")) {
                     int index = email.indexOf('@');
                     email = email.substring(0, index);
@@ -93,6 +93,9 @@ public class ProfileController {
     @RequestMapping(value = "/deletePicture", method = RequestMethod.POST)
     public String addUploadPicture(Map<String, Object> model, HttpServletRequest request) throws IOException {
         String email = request.getSession().getAttribute("emailID").toString();
+        model.put("email", email);
+        User findUser = userRepository.findByEmailID(email);
+        model.put("aboutMe", findUser.getAboutMe());
         int index = email.indexOf('@');
         email = email.substring(0, index);
 
@@ -121,51 +124,102 @@ public class ProfileController {
         return "home";
     }
 
-
-
-//    @RequestMapping(value = "/searchProfile", method = RequestMethod.POST)
-//    public String fetchPicture(@RequestParam("search") String email, Map<String, Object> model, HttpServletRequest request) {
-//
-//        try {
-//            User findUser = userRepository.findByEmailID(email);
-//            if (findUser == null) {
-//                model.put("msg", "User not found");
-//                return "error";
-//            }
-//            String uploadsDir = "/img";
-////                String email = request.getSession().getAttribute("emailID").toString();
-//            String path = request.getServletContext().getRealPath(uploadsDir);
-//            File f = new File(path + File.separator + findUser.getEmailID());
-//            System.out.println(path + " " + findUser.getEmailID());
-////                    System.out.println(f.getPath());
-////                    System.out.println(f.getAbsolutePath());
-//            System.out.println(f.exists() + " " + f.isDirectory());
-//            if (f.exists() && !f.isDirectory()) {
-//                model.put("image", f.getAbsolutePath());
-//            } else {
-//                model.put("image", path + File.separator + "default.jpg");
-//            }
-//            model.put("aboutMe", findUser.getAboutMe());
-//            model.put("email", findUser.getEmailID());
-//            return "search";
-//        } catch (Exception e) {
-//            model.put("msg", e);
-//            return "error";
-//        }
-//
-//    }
-
     @RequestMapping(value = "/updateAboutMe", method = RequestMethod.POST)
-    public String updateAboutMe(@RequestParam("aboutMe") String aboutMe, Map<String, Object> model, HttpServletRequest request) {
-        try {
-            HttpSession session = request.getSession();
-            String email = session.getAttribute("emailID").toString();
-            User findUser = userRepository.findByEmailID(email);
-            findUser.setAboutMe(aboutMe);
-            userRepository.save(findUser);
+    public String deletePicture(@RequestParam("aboutMe") String aboutMe, Map<String, Object> model, HttpServletRequest request) throws IOException {
+        HttpSession session = request.getSession();
+        String  email = session.getAttribute("emailID").toString();
+        User findUser = userRepository.findByEmailID(email);
+        findUser.setAboutMe(aboutMe);
+        userRepository.save(findUser);
+
+        model.put("email", email);
+        model.put("aboutMe", findUser.getAboutMe());
+        if(profile.equals("aws")) {
+            String keyName = email + ".jpg";
+
+            String amazonFileUploadLocationOriginal = bucketName + "/" + "img";
+
+            AmazonS3 s3Client = AmazonS3ClientBuilder.standard()
+                    .withCredentials(new InstanceProfileCredentialsProvider(false))
+                    .build();
+            System.out.println(s3Client.doesObjectExist(amazonFileUploadLocationOriginal, keyName));
+            if(s3Client.doesObjectExist(amazonFileUploadLocationOriginal, keyName)) {
+                URL s = s3Client.getUrl(amazonFileUploadLocationOriginal, keyName);
+                System.out.println(s);
+                model.put("image", s);
+            }
+            else {
+                URL s = s3Client.getUrl(amazonFileUploadLocationOriginal, "default.jpg");
+                System.out.println(s);
+                model.put("image", s);
+            }
             return "home";
+
+        }
+        else {
+            int index = email.indexOf('@');
+            email = email.substring(0, index);
+            Path path = Paths.get(request.getServletContext().getRealPath("image"));
+            File f = new File(path + File.separator + email + ".jpg");
+            if(f.exists()) {
+                model.put("image", "/image/"+email+".jpg");
+            }
+            else {
+                model.put("image", "/image/default.jpg");
+            }
+            return "home";
+        }
+    }
+
+    @RequestMapping(value = "/searchProfile", method = RequestMethod.POST)
+    public String fetchPicture(@RequestParam("search") String email, Map<String, Object> model, HttpServletRequest request) throws IOException {
+
+        try {
+            User findUser = userRepository.findByEmailID(email);
+            if (findUser == null) {
+                model.put("msg", "User not found");
+                return "error";
+            }
+
+            model.put("email", email);
+            model.put("aboutMe", findUser.getAboutMe());
+
+            int index = email.indexOf('@');
+            email = email.substring(0, index);
+
+            if(profile.equals("aws")) {
+                String keyName = email + ".jpg";
+
+                String amazonFileUploadLocationOriginal = bucketName + "/" + "img";
+                AmazonS3 s3Client = AmazonS3ClientBuilder.standard()
+                        .withCredentials(new InstanceProfileCredentialsProvider(false))
+                        .build();
+
+                System.out.println(s3Client.doesObjectExist(amazonFileUploadLocationOriginal, keyName));
+                if (s3Client.doesObjectExist(amazonFileUploadLocationOriginal, keyName)) {
+                    URL s = s3Client.getUrl(amazonFileUploadLocationOriginal, keyName);
+                    System.out.println(s);
+                    model.put("image", s);
+                } else {
+                    URL s = s3Client.getUrl(amazonFileUploadLocationOriginal, "default.jpg");
+                    System.out.println(s);
+                    model.put("image", s);
+                }
+            }
+            else {
+                Path path = Paths.get(request.getServletContext().getRealPath("image"));
+                File f = new File(path + File.separator + email + ".jpg");
+                if(f.exists()) {
+                    model.put("image", "/image/"+email+".jpg");
+                }
+                else {
+                    model.put("image", "/image/default.jpg");
+                }
+            }
+            return "search";
+
         } catch (Exception e) {
-            model.put("msg", "Please enter correct credentials");
+            model.put("msg", e);
             return "error";
         }
 

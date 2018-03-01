@@ -1,17 +1,30 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
-<div th:replace="fragments/header :: header"/>
 
 <head>
-    <div th:replace="fragments/navigation :: navigation"/>
-    <title>Search Profile</title>
-</head>
+    <title>ABD</title></head>
 <body>
+<div th:replace="fragments/header :: header"></div>
+<div th:replace="fragments/navigation :: navigation"></div>
+<!-- Page Content -->
+<!--<div th:replace="fragments/profile :: profile"/>-->
+<div class="container">
 
-<span th:text="${email}"></span>
-<img src="${image}" alt="abc"/>
-<span th:text="${aboutMe}"></span>
 
+    <p>
 
+        <span th:text="${email}"></span>
+        <br />
+        <span th:text="${image}"></span>
+    </p>
+    <img th:src="@{${image}}" />
+    <br />
+    <h3>
+        <span th:text="${aboutMe}"></span>
+    </h3>
+
+</div>
+<!-- /.container -->
+<div th:replace="fragments/footer :: footer"/>
 </body>
 </html>

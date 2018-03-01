@@ -95,11 +95,12 @@ public class UserRegisterController {
                 session.setAttribute("emailID", findUser.getEmailID());
                 String aboutMe = findUser.getAboutMe();
                 model.put("date", new Date());
+                model.put("email", emailID);
+                model.put("aboutMe", aboutMe);
 
                 int index = emailID.indexOf('@');
                 String email = emailID.substring(0,index);
 
-                System.out.println(profile);
 
                 if(profile.equals("aws")) {
 
@@ -133,7 +134,6 @@ public class UserRegisterController {
                         model.put("image", "/image/default.jpg");
                     }
                 }
-                model.put("aboutMe", aboutMe);
                 return "home";
             } else {
                 model.put("msg", "Please enter correct credentials");
