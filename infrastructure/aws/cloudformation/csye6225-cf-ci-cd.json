@@ -64,7 +64,9 @@
 						{
 							"Action": [
 								"s3:Get*",
-								"s3:List*"
+								"s3:List*",
+								"s3:Put*",
+								"s3:Delete*"
 							],
 							"Effect": "Allow",
 							"Resource": [
@@ -186,7 +188,6 @@
 				"myS3Bucket" : {
 					"Type" : "AWS::S3::Bucket",
 					"Properties" : {
-						"AccessControl" : "PublicRead",
 						"BucketName" : {"Ref" : "S3BucketName"}
 					}
 				},
