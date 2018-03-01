@@ -107,8 +107,10 @@ public class ProfileController {
           AmazonS3 s3Client = AmazonS3ClientBuilder.standard()
                     .withCredentials(new InstanceProfileCredentialsProvider(false))
                     .build();
-            DeleteObjectRequest deleteObjectRequest = new DeleteObjectRequest(amazonFileUploadLocationOriginal, keyName);
-            s3Client.deleteObject(deleteObjectRequest);
+            if(s3Client.doesObjectExist(amazonFileUploadLocationOriginal, keyName)){
+                DeleteObjectRequest deleteObjectRequest = new DeleteObjectRequest(amazonFileUploadLocationOriginal, keyName);
+                s3Client.deleteObject(deleteObjectRequest);
+            }
             URL imageUrl = s3Client.getUrl(amazonFileUploadLocationOriginal, "default.jpg");
             System.out.println(imageUrl);
             model.put("image", imageUrl);
