@@ -4,6 +4,9 @@
 		"CodeDeployEC2S3PolicyName": {
 			"Type" : "String"
 		},
+		"WebAppBucketName":{
+			"Type" : "String"
+		},
 		"TravisUploadToS3PolicyName": {
 			"Type" : "String"
 		},
@@ -64,7 +67,10 @@
 								"s3:List*"
 							],
 							"Effect": "Allow",
-							"Resource": [{"Fn::Join": [ "", [{"Fn::GetAtt" : ["myS3Bucket","Arn"]},"/*"]]}]
+							"Resource": [
+								{"Fn::Join": [ "", [{"Fn::GetAtt" : ["myS3Bucket","Arn"]},"/*"]]},
+								{"Fn::Join": [ "", ["arn:aws:s3:::",{"Ref" : "WebAppBucketName"},"/*"]]}
+							]
 						}
 					]
 				},
@@ -85,7 +91,9 @@
 							"Action": [
 								"s3:PutObject"
 							],
-							"Resource": [ {"Fn::Join": [ "", [{"Fn::GetAtt" : ["myS3Bucket","Arn"]},"/*"]]}]
+							"Resource": [
+								{"Fn::Join": [ "", [{"Fn::GetAtt" : ["myS3Bucket","Arn"]},"/*"]]}
+							]
 						}
 					]
 				},
