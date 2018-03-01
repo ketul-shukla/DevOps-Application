@@ -1,0 +1,28 @@
+version: 0.0
+os: linux
+
+files:
+  - source: ./webapp/build/libs/ROOT.war
+    destination: /var/lib/tomcat8/webapps
+
+hooks:
+  AfterInstall:
+   - location: ./afterInstall.sh
+     timeout: 180
+     runas: ubuntu
+  ApplicationStart:
+   - location: ./applicationStart.sh
+     timeout: 180
+     runas: ubuntu
+  ValidateService:
+   - location: ./validateService.sh
+     timeout: 180
+     runas: ubuntu
+  ApplicationStop:
+   - location: ./applicationStop.sh
+     timeout: 180
+     runas: ubuntu
+  BeforeInstall:
+   - location: ./beforeInstall.sh
+     timeout: 180
+     runas: ubuntu
