@@ -1,7 +1,10 @@
 package com.csye6225.spring2018.controller;
 
+import com.amazonaws.auth.InstanceProfileCredentialsProvider;
 import com.amazonaws.auth.PropertiesCredentials;
+import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.csye6225.spring2018.user.User;
 import com.csye6225.spring2018.user.UserRepository;
 import org.slf4j.Logger;
@@ -36,17 +39,11 @@ public class UserRegisterController {
     @Autowired
     private UserRepository userRepository;
 
-    @Value("${server}")
-    String server;
-
-    @Value("${accessKey}")
-    String accessKey;
-
-    @Value("${secretKey}")
-    String secretKey;
-
-    @Value("${bucketName}")
+    @Value("${aws.cloudformation.bucket.name}")
     String bucketName;
+
+    @Value("${spring.profiles.active}")
+    String profile;
 
     @RequestMapping(value = "/createAccount", method = RequestMethod.GET)
     public String createNewAccount() {
@@ -55,7 +52,6 @@ public class UserRegisterController {
 
     @RequestMapping(value = "/createAccount", method = RequestMethod.POST)
     public String createAccount(@RequestParam("emailID") String emailAddress, @RequestParam("password") String password, Map<String, Object> model, HttpServletRequest request) throws IOException {
-        String userId = "";
         User user = userRepository.findByEmailID(emailAddress);
         if(user == null) {
             session = request.getSession();
@@ -68,10 +64,11 @@ public class UserRegisterController {
             userRepository.save(newUser);
             model.put("date", new Date());
             session.setAttribute("emailID", emailAddress);
-            if(server.equals("s3bucket")) {
+            if(profile.equals("aws")) {
                 String amazonFileUploadLocationOriginal = bucketName + "/" + "img";
-                String credentials = new String("secretKey=" + secretKey + "\n" + "accessKey=" + accessKey);
-                AmazonS3Client s3Client = new AmazonS3Client(new PropertiesCredentials(new ByteArrayInputStream(credentials.getBytes())));
+              AmazonS3 s3Client = AmazonS3ClientBuilder.standard()
+                        .withCredentials(new InstanceProfileCredentialsProvider(false))
+                        .build();
                 URL s = s3Client.getUrl(amazonFileUploadLocationOriginal, "default.jpg");
                 System.out.println(s);
                 model.put("image", s);
@@ -98,17 +95,23 @@ public class UserRegisterController {
                 session.setAttribute("emailID", findUser.getEmailID());
                 String aboutMe = findUser.getAboutMe();
                 model.put("date", new Date());
+                model.put("email", emailID);
+                model.put("aboutMe", aboutMe);
 
                 int index = emailID.indexOf('@');
                 String email = emailID.substring(0,index);
 
-                System.out.println(server);
 
-                if(server.equals("s3bucket")) {
+                if(profile.equals("aws")) {
+
+                    logger.info("BucketName : " + bucketName);
+                    logger.info("Profile : " + profile);
+
                     String keyName = email + ".jpg";
                     String amazonFileUploadLocationOriginal = bucketName + "/" + "img";
-                    String credentials = new String("secretKey=" + secretKey + "\n" + "accessKey=" + accessKey);
-                    AmazonS3Client s3Client = new AmazonS3Client(new PropertiesCredentials(new ByteArrayInputStream(credentials.getBytes())));
+                  AmazonS3 s3Client = AmazonS3ClientBuilder.standard()
+                            .withCredentials(new InstanceProfileCredentialsProvider(false))
+                            .build();
                     System.out.println(s3Client.doesObjectExist(bucketName, keyName));
                     if(!s3Client.doesObjectExist(amazonFileUploadLocationOriginal, keyName)) {
                         URL imageUrl = s3Client.getUrl(amazonFileUploadLocationOriginal, "default.jpg");
@@ -131,7 +134,6 @@ public class UserRegisterController {
                         model.put("image", "/image/default.jpg");
                     }
                 }
-                model.put("aboutMe", aboutMe);
                 return "home";
             } else {
                 model.put("msg", "Please enter correct credentials");
