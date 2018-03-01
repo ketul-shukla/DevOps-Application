@@ -133,6 +133,15 @@
 										    ]
 										  ]
 										},
+										{
+ 											"Fn::Join": [
+   											"",
+   											[
+     											"sudo echo JAVA_OPTS=\\\"\\${JAVA_OPTS} -Daws.cloudformation.bucket.name=",
+     											{"Ref" : "S3BucketName"},"\\\"\\ >> /etc/default/tomcat8 \n"
+   											]
+ 											]
+										},
 										"sudo service tomcat8 restart \n"
 									]
                 ]
@@ -166,7 +175,6 @@
 				"myS3Bucket" : {
 					"Type" : "AWS::S3::Bucket",
 					"Properties" : {
-						"AccessControl" : "PublicRead",
 						"BucketName" : {"Ref" : "S3BucketName"}
 					}
 				},
