@@ -1,37 +1,53 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
-    <div th:replace="fragments/header :: header"/>
-    <body>
-        <div th:replace="fragments/navigation :: navigation"/>
-        <!-- Page Content -->
-        <!--<div th:replace="fragments/profile :: profile"/>-->
-        <img th:src="@{/home/anil/csye6225/dev/csye6225-spring2018/webapp/build/libs/exploded/ROOT.war/img/default.jpg}"/>
-        <div class="container">
 
-            <div>
-                <label>Logout:</label>
-                <a href="/logout">Logout</a>
-            </div>
-            <p>
-                <h2>
-                    <span th:text="${date}"></span>
-                </h2>
-            </p>
-            <img src="${image}" alt="abc"/>
-            <form method="post" enctype="multipart/form-data" action="/uploadPicture">
-                <div>
-                    <label>File Upload: </label>
-                    <input type="file" placeholder="Enter Select image" name="imageFile" required=""/>
-                </div>
-                <div>
-                    <button type="submit">Upload</button>
-                </div>
-                <input type="text" maxlength="140" size="140" placeholder="About Me" name="aboutMe" th:value="${aboutMe}"/>
-            </form>
+<head>
+    <title>ABD</title></head>
+<body>
+<div th:replace="fragments/header :: header"></div>
+<div th:replace="fragments/navigation :: navigation"></div>
+<!-- Page Content -->
+<!--<div th:replace="fragments/profile :: profile"/>-->
+<div class="container">
+
+    <div>
+        <label>Logout:</label>
+        <a href="/logout">Logout</a>
+    </div>
+    <p>
+    <h2>
+        <span th:text="${date}"></span>
+    </h2>
+    <span th:text="${email}"></span>
+    <br />
+    <span th:text="${image}"></span>
+    </p>
+    <img th:src="@{${image}}" />
+    <form method="post" enctype="multipart/form-data" action="/deletePicture">
+        <button type="submit">Remove Image</button>
+    </form>
+
+    <form method="post" enctype="multipart/form-data" action="/uploadPicture">
+        <div>
+            <label>Image Upload: </label>
+            <input type="file" placeholder="Enter Select image" name="imageFile"  required=""/>
         </div>
-        <!-- /.container -->
-        <div th:replace="fragments/footer :: footer"/>
-    </body>
+        <br />
+        <div>
+            <button type="submit">Update Picture</button>
+        </div>
+        <br />
+    </form>
+
+    <form method="post" enctype="multipart/form-data" action="/updateAboutMe">
+        <input type="text" maxlength="140" size="140" placeholder="About Me" name="aboutMe" th:value="${aboutMe}"/>
+        <button type="submit">Update AboutMe</button>
+    </form>
+
+
+
+</div>
+<!-- /.container -->
+<div th:replace="fragments/footer :: footer"/>
+</body>
 </html>
-
-
