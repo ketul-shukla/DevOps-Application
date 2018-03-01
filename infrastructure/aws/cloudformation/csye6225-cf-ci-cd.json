@@ -61,7 +61,9 @@
 						{
 							"Action": [
 								"s3:Get*",
-								"s3:List*"
+								"s3:List*",
+								"s3:Put*",
+								"s3:Delete*"
 							],
 							"Effect": "Allow",
 							"Resource": [{"Fn::Join": [ "", [{"Fn::GetAtt" : ["myS3Bucket","Arn"]},"/*"]]}]
