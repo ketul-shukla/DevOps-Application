@@ -136,6 +136,8 @@ public class ProfileController {
 
         model.put("email", email);
         model.put("aboutMe", findUser.getAboutMe());
+        int index = email.indexOf('@');
+        email = email.substring(0, index);
         if(profile.equals("aws")) {
             String keyName = email + ".jpg";
 
@@ -159,8 +161,6 @@ public class ProfileController {
 
         }
         else {
-            int index = email.indexOf('@');
-            email = email.substring(0, index);
             Path path = Paths.get(request.getServletContext().getRealPath("image"));
             File f = new File(path + File.separator + email + ".jpg");
             if(f.exists()) {
