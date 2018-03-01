@@ -35,7 +35,7 @@ public class ProfileController {
     String profile;
 
     @RequestMapping(value = "/uploadPicture", method = RequestMethod.POST)
-    public String addUploadPicture(@RequestParam("imageFile") MultipartFile file, @RequestParam("aboutMe") String aboutMe, Map<String, Object> model, HttpServletRequest request) {
+    public String addUploadPicture(@RequestParam("imageFile") MultipartFile file, Map<String, Object> model, HttpServletRequest request) {
         if (!file.isEmpty()) {
             try {
                 String fileExtension = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf(".") + 1);
