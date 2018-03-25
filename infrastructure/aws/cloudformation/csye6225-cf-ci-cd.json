@@ -51,6 +51,9 @@
 		},
 		"IamInstanceProfileName": {
 			"Type" : "String"
+		},
+		"LambdaExecutionRoleName": {
+			"Type" : "String"
 		}
 	},
 	"Resources": {
@@ -224,6 +227,54 @@
 								{"Ref" : "myCodeDeployEC2ServiceRole"}
 							],
 							"InstanceProfileName": {"Ref" : "IamInstanceProfileName"}
+						}
+					},
+					"myCloudWatchLog" : {
+						"Type": "AWS::IAM::Policy",
+						"Properties": {
+							"PolicyName": "CloudWatchLogPolicy",
+							"PolicyDocument": {
+								"Version": "2012-10-17",
+								"Statement": [
+									{
+										"Effect": "Allow",
+										"Action": [
+											"logs:CreateLogGroup",
+											"logs:CreateLogStream",
+											"logs:PutLogEvents",
+											"logs:DescribeLogStreams"
+										],
+										"Resource": [
+											"arn:aws:logs:*:*:*"
+										]
+									}
+								]
+							},
+							"Roles" : [
+								{"Ref" : "myCodeDeployEC2ServiceRole"}
+							]
+						}
+					},
+					"myLambdaExecutionRole" : {
+						"Type": "AWS::IAM::Role",
+						"Properties": {
+							"AssumeRolePolicyDocument": {
+								"Version": "2012-10-17",
+								"Statement": [ {
+									"Sid": "",
+									"Effect": "Allow",
+									"Principal": {
+										"Service": [ "lambda.amazonaws.com" ]
+									},
+									"Action": "sts:AssumeRole"
+									}
+								]
+							},
+							"ManagedPolicyArns": [
+								"arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+							],
+							"RoleName" : {"Ref" : "LambdaExecutionRoleName"},
+							"Path": "/"
 						}
 					}
 				}
