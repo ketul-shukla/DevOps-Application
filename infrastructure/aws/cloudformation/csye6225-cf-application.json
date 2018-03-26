@@ -156,7 +156,16 @@
                     "sudo echo 'log_stream_name = csye6225-webapp' >> /tmp/awslogs.conf \n",
                     "sudo echo 'datetime_format = %d/%b/%Y:%H:%M:%S' >> /tmp/awslogs.conf \n",
 										"sudo wget https://s3.amazonaws.com/aws-cloudwatch/downloads/latest/awslogs-agent-setup.py \n",
-										"sudo python ./awslogs-agent-setup.py --region us-east-1 -c /tmp/awslogs.conf \n",
+										{
+                      "Fn::Join": [
+                      	" ",
+                        [
+                          "sudo python ./awslogs-agent-setup.py -n -r",
+                          {"Ref": "AWS::Region"},
+                          "-c /tmp/awslogs.conf || error_exit 'Failed to run CloudWatch Logs agent setup' \n"
+                        ]
+                      ]
+                    },
 										"sudo touch /etc/systemd/system/awslogs.service \n",
 										"sudo chmod o+w /etc/systemd/system/awslogs.service \n",
 										"sudo echo '#!/bin/sh' >> /etc/systemd/system/awslogs.service \n",
