@@ -78,6 +78,9 @@
 		},
 		"DBSecurityGroupId": {
 			"Type" : "String"
+		},
+		"SNSTopicName":{
+			"Type" : "String"
 		}
 	},
 	"Resources": {
@@ -142,7 +145,26 @@
    											]
  											]
 										},
-										"sudo service tomcat8 restart \n"
+										"sudo service tomcat8 restart \n",
+										"sudo wget https://s3.amazonaws.com/aws-cloudwatch/downloads/latest/awslogs-agent-setup.py \n",
+										"sudo python ./awslogs-agent-setup.py --region us-east-1 \n",
+										"sudo echo '#!/bin/sh' >> /etc/systemd/system/awslogs.service \n",
+										"sudo echo '[Unit]' >> /etc/systemd/system/awslogs.service \n",
+										"sudo echo 'Description=The CloudWatch Logs agent' >> /etc/systemd/system/awslogs.service \n",
+										"sudo echo 'After=rc-local.service' >> /etc/systemd/system/awslogs.service \n",
+										"sudo echo '' >> /etc/systemd/system/awslogs.service \n",
+										"sudo echo '[Service]' >> /etc/systemd/system/awslogs.service \n",
+										"sudo echo 'Type=simple' >> /etc/systemd/system/awslogs.service \n",
+										"sudo echo 'Restart=always' >> /etc/systemd/system/awslogs.service \n",
+										"sudo echo 'KillMode=process' >> /etc/systemd/system/awslogs.service \n",
+										"sudo echo 'TimeoutSec=infinity' >> /etc/systemd/system/awslogs.service \n",
+										"sudo echo 'PIDFile=/var/awslogs/state/awslogs.pid' >> /etc/systemd/system/awslogs.service \n",
+										"sudo echo 'ExecStart=/var/awslogs/bin/awslogs-agent-launcher.sh --start --background --pidfile $PIDFILE --user awslogs --chuid awslogs &' >> /etc/systemd/system/awslogs.service \n",
+										"sudo echo '' >> /etc/systemd/system/awslogs.service \n",
+										"sudo echo '[Install]' >> /etc/systemd/system/awslogs.service \n",
+										"sudo echo 'WantedBy=multi-user.target' >> /etc/systemd/system/awslogs.service \n",
+										"sudo chmod +x /etc/systemd/system/awslogs.service \n",
+										"sudo systemctl start awslogs.service \n"
 									]
                 ]
               }
@@ -169,13 +191,16 @@
 							"ReadCapacityUnits" : "5",
 							"WriteCapacityUnits" : "5"
 						},
-						"TableName" : {"Ref" : "DynamoDBTableName"}
+						"TableName" : {"Ref" : "DynamoDBTableName"},
+						"TimeToLiveSpecification": {
+							"AttributeName": "TTL",
+							"Enabled": "true"
+						}
 					}
 				},
 				"myS3Bucket" : {
 					"Type" : "AWS::S3::Bucket",
 					"Properties" : {
-						"AccessControl" : "PublicRead",
 						"BucketName" : {"Ref" : "S3BucketName"}
 					}
 				},
@@ -196,6 +221,12 @@
 						"DBName" : { "Ref" : "DBName" },
 						"VPCSecurityGroups" : [{"Ref" : "DBSecurityGroupId"}]
 					}
+				},
+				"mySNSTopic" : {
+					"Type":"AWS::SNS::Topic",
+         	"Properties":{
+            "TopicName":{ "Ref":"SNSTopicName"}
+         	}
 				}
 			}
 		}

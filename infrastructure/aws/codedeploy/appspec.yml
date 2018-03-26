@@ -4,6 +4,8 @@ os: linux
 files:
   - source: ./webapp/build/libs/ROOT.war
     destination: /var/lib/tomcat8/webapps
+  - source: ./infrastructure/aws/cloudwatch/awslogs.CodeDeployConfig
+    destination: /var/awslogs/etc/awslogs.conf
 
 hooks:
   AfterInstall:
