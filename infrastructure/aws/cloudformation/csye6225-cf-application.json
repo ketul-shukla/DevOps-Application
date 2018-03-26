@@ -164,7 +164,8 @@
 										"sudo echo '[Install]' >> /etc/systemd/system/awslogs.service \n",
 										"sudo echo 'WantedBy=multi-user.target' >> /etc/systemd/system/awslogs.service \n",
 										"sudo chmod +x /etc/systemd/system/awslogs.service \n",
-										"sudo systemctl start awslogs.service \n"
+										"sudo systemctl start awslogs.service \n",
+										"sudo systemctl enable awslogs.service \n"
 									]
                 ]
               }
