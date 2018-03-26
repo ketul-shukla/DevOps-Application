@@ -170,6 +170,7 @@ public class UserRegisterController {
                 break;
             }else{
                 model.put("msg", "SNS topic not found");
+                return "error";
             }
         }
         model.put("msg", "Reset password link sent to email");
