@@ -164,7 +164,8 @@ public class UserRegisterController {
                 .build();
         List<Topic> snsTopics = snsClient.listTopics().getTopics();
         for(Topic topic: snsTopics){
-            if(topic.getTopicArn().endsWith("password_reset")){
+            logger.info(topic.getTopicArn());
+            if(topic.getTopicArn().contains("password_reset")){
                 PublishRequest snsRequest = new PublishRequest(topic.getTopicArn(), emailID);
                 snsClient.publish(snsRequest);
                 break;
