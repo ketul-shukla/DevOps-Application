@@ -164,22 +164,13 @@ public class UserRegisterController {
         AmazonSNS snsClient = AmazonSNSClientBuilder.standard()
                 .withCredentials(new InstanceProfileCredentialsProvider(false))
                 .build();
-        ListTopicsResult snsResult = snsClient.listTopics();
-        List<Topic> snsTopics = new ArrayList<>();
-        snsTopics.addAll(snsResult.getTopics());
-        while (snsResult.getNextToken() != null) {
-            snsResult = snsClient.listTopics(snsResult.getNextToken());
-            snsTopics.addAll(snsResult.getTopics());
-        }
+        List<Topic> snsTopics = snsClient.listTopics().getTopics();
         for(Topic topic: snsTopics){
             logger.info(topic.getTopicArn());
             if(topic.getTopicArn().endsWith("password_reset")){
                 PublishRequest snsRequest = new PublishRequest(topic.getTopicArn(), emailID);
                 snsClient.publish(snsRequest);
                 break;
-            }else{
-                model.put("msg", "SNS topic not found");
-                return "error";
             }
         }
         model.put("msg", "Reset password link sent to email");
