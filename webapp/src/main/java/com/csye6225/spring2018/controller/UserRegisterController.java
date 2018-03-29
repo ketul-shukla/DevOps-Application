@@ -7,6 +7,7 @@ import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.sns.AmazonSNS;
 import com.amazonaws.services.sns.AmazonSNSClientBuilder;
+import com.amazonaws.services.sns.model.ListTopicsResult;
 import com.amazonaws.services.sns.model.PublishRequest;
 import com.amazonaws.services.sns.model.Topic;
 import com.csye6225.spring2018.user.User;
@@ -30,6 +31,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -162,10 +164,12 @@ public class UserRegisterController {
         AmazonSNS snsClient = AmazonSNSClientBuilder.standard()
                 .withCredentials(new InstanceProfileCredentialsProvider(false))
                 .build();
-        List<Topic> snsTopics = snsClient.listTopics().getTopics();
+        ListTopicsResult snsResult = snsClient.listTopics();
+        List<Topic> snsTopics = new ArrayList<>();
+        snsTopics.addAll(snsResult.getTopics());
         for(Topic topic: snsTopics){
             logger.info(topic.getTopicArn());
-            if(topic.getTopicArn().contains("password_reset")){
+            if(topic.getTopicArn().endsWith("password_reset")){
                 PublishRequest snsRequest = new PublishRequest(topic.getTopicArn(), emailID);
                 snsClient.publish(snsRequest);
                 break;
