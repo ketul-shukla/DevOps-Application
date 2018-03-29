@@ -167,6 +167,10 @@ public class UserRegisterController {
         ListTopicsResult snsResult = snsClient.listTopics();
         List<Topic> snsTopics = new ArrayList<>();
         snsTopics.addAll(snsResult.getTopics());
+        while (snsResult.getNextToken() != null) {
+            snsResult = snsClient.listTopics(snsResult.getNextToken());
+            snsTopics.addAll(snsResult.getTopics());
+        }
         for(Topic topic: snsTopics){
             logger.info(topic.getTopicArn());
             if(topic.getTopicArn().endsWith("password_reset")){
