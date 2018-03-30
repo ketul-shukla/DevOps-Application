@@ -28,6 +28,6 @@ aws cloudformation create-stack --stack-name $stackName --template-body file://c
 
 aws cloudformation wait stack-create-complete --stack-name $stackName
 
-aws s3 cp ./default.jpg s3://$bucketName/img/ --acl public-read
+aws s3 cp ./default.jpg s3://web-app.csye6225-spring2018-shuklake.me --acl public-read
 
 aws cloudformation describe-stacks --stack-name $stackName
