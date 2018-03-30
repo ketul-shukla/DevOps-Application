@@ -147,7 +147,7 @@ public class UserRegisterController {
                 return "error";
             }
         } catch(Exception e){
-            model.put("msg", "Please enter correct credentials");
+            model.put("msg", "Error logging please try again");
             e.printStackTrace();
             return "error";
         }
