@@ -3,6 +3,10 @@
 stackName=$1
 echo "StackName:"$stackName
 
+read -p "Enter User: " userName
+bucketName="web-app.csye6225-spring2018-"$userName".me"
+echo $bucketName
+
 imageId="ami-66506c1c"
 instanceType="t2.micro"
 
@@ -20,8 +24,10 @@ subnetGroup=$(aws rds describe-db-subnet-groups --filters Name=vpc-id,Values=$Vp
 
 iamInstanceProfile=$(aws iam list-instance-profiles --query 'InstanceProfiles[].InstanceProfileName' --output text)
 
-aws cloudformation create-stack --stack-name $stackName --template-body file://csye6225-cf-application.json --parameters ParameterKey=imgID,ParameterValue=$imageId ParameterKey=instanceType,ParameterValue=$instanceType ParameterKey=volumeType,ParameterValue="gp2" ParameterKey=volumeSize,ParameterValue="16" ParameterKey=keyName,ParameterValue="csye6225" ParameterKey=EC2InstanceName,ParameterValue="csye6225-EC2Instance" ParameterKey=securityGroupId,ParameterValue=$securityGroupId ParameterKey=subnetId,ParameterValue=$subnetId ParameterKey=IamInstanceProfileName,ParameterValue=$iamInstanceProfile ParameterKey=DynamoDBTableName,ParameterValue="csye6225" ParameterKey=S3BucketName,ParameterValue="web-app.csye6225-spring2018-shuklake.me" ParameterKey=DBEngine,ParameterValue="MySQL" ParameterKey=DBEngineVersion,ParameterValue="5.6.37" ParameterKey=DBInstanceClass,ParameterValue="db.t2.medium" ParameterKey=DBInstanceIdentifier,ParameterValue="csye6225-spring2018" ParameterKey=DBUser,ParameterValue="csye6225master" ParameterKey=DBPassword,ParameterValue="csye6225password" ParameterKey=DBSubnetGroup,ParameterValue=$subnetGroup ParameterKey=DBName,ParameterValue="csye6225" ParameterKey=DBSecurityGroupId,ParameterValue=$dbSecurityGroupId
+aws cloudformation create-stack --stack-name $stackName --template-body file://csye6225-cf-application.json --parameters ParameterKey=imgID,ParameterValue=$imageId ParameterKey=instanceType,ParameterValue=$instanceType ParameterKey=volumeType,ParameterValue="gp2" ParameterKey=volumeSize,ParameterValue="16" ParameterKey=keyName,ParameterValue="csye6225" ParameterKey=EC2InstanceName,ParameterValue="csye6225-EC2Instance" ParameterKey=securityGroupId,ParameterValue=$securityGroupId ParameterKey=subnetId,ParameterValue=$subnetId ParameterKey=IamInstanceProfileName,ParameterValue=$iamInstanceProfile ParameterKey=DynamoDBTableName,ParameterValue="csye6225" ParameterKey=S3BucketName,ParameterValue=$bucketName ParameterKey=DBEngine,ParameterValue="MySQL" ParameterKey=DBEngineVersion,ParameterValue="5.6.37" ParameterKey=DBInstanceClass,ParameterValue="db.t2.medium" ParameterKey=DBInstanceIdentifier,ParameterValue="csye6225-spring2018" ParameterKey=DBUser,ParameterValue="csye6225master" ParameterKey=DBPassword,ParameterValue="csye6225password" ParameterKey=DBSubnetGroup,ParameterValue=$subnetGroup ParameterKey=DBName,ParameterValue="csye6225" ParameterKey=DBSecurityGroupId,ParameterValue=$dbSecurityGroupId ParameterKey=SNSTopicName,ParameterValue="password_reset"
 
 aws cloudformation wait stack-create-complete --stack-name $stackName
+
+aws s3 cp ./default.jpg s3://web-app.csye6225-spring2018-shuklake.me --acl public-read
 
 aws cloudformation describe-stacks --stack-name $stackName
