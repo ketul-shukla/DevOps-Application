@@ -5,6 +5,11 @@ import com.amazonaws.auth.PropertiesCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import com.amazonaws.services.sns.AmazonSNS;
+import com.amazonaws.services.sns.AmazonSNSClientBuilder;
+import com.amazonaws.services.sns.model.ListTopicsResult;
+import com.amazonaws.services.sns.model.PublishRequest;
+import com.amazonaws.services.sns.model.Topic;
 import com.csye6225.spring2018.user.User;
 import com.csye6225.spring2018.user.UserRepository;
 import org.slf4j.Logger;
@@ -26,7 +31,9 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -140,11 +147,34 @@ public class UserRegisterController {
                 return "error";
             }
         } catch(Exception e){
-            model.put("msg", "Please enter correct credentials");
+            model.put("msg", "Error logging please try again");
             e.printStackTrace();
             return "error";
         }
 
+    }
+
+    @RequestMapping(value = "/resetPassword", method = RequestMethod.GET)
+    public String resetPassword(){
+        return "resetPassword";
+    }
+
+    @RequestMapping(value = "/resetPassword", method = RequestMethod.POST)
+    public String resetPassword(HttpServletRequest request, @RequestParam("emailID") String emailID, Map<String, Object> model){
+        AmazonSNS snsClient = AmazonSNSClientBuilder.standard()
+                .withCredentials(new InstanceProfileCredentialsProvider(false))
+                .build();
+        List<Topic> snsTopics = snsClient.listTopics().getTopics();
+        for(Topic topic: snsTopics){
+            logger.info(topic.getTopicArn());
+            if(topic.getTopicArn().endsWith("password_reset")){
+                PublishRequest snsRequest = new PublishRequest(topic.getTopicArn(), emailID);
+                snsClient.publish(snsRequest);
+                break;
+            }
+        }
+        model.put("msg", "Reset password link sent to email");
+        return "error";
     }
 
     @RequestMapping(value = "/logout")
