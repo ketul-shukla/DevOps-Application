@@ -78,6 +78,9 @@
 		},
 		"DBSecurityGroupId": {
 			"Type" : "String"
+		},
+		"SNSTopicName":{
+			"Type" : "String"
 		}
 	},
 	"Resources": {
@@ -142,7 +145,47 @@
    											]
  											]
 										},
-										"sudo service tomcat8 restart \n"
+										"sudo service tomcat8 restart \n",
+										"sudo touch /tmp/awslogs.conf \n",
+										"sudo chmod o+w /tmp/awslogs.conf \n",
+                    "sudo echo '[general]' >> /tmp/awslogs.conf \n",
+                    "sudo echo 'state_file= /var/awslogs/agent-state' >> /tmp/awslogs.conf \n",
+                    "sudo echo '[logstream1]' >> /tmp/awslogs.conf \n",
+                    "sudo echo 'file = /var/log/tomcat8/csye6225-aws.log' >> /tmp/awslogs.conf \n",
+                    "sudo echo 'log_group_name = csye6225-webapp' >> /tmp/awslogs.conf \n",
+                    "sudo echo 'log_stream_name = csye6225-webapp' >> /tmp/awslogs.conf \n",
+                    "sudo echo 'datetime_format = %d/%b/%Y:%H:%M:%S' >> /tmp/awslogs.conf \n",
+										"sudo wget https://s3.amazonaws.com/aws-cloudwatch/downloads/latest/awslogs-agent-setup.py \n",
+										{
+                      "Fn::Join": [
+                      	" ",
+                        [
+                          "sudo python ./awslogs-agent-setup.py -n -r",
+                          {"Ref": "AWS::Region"},
+                          "-c /tmp/awslogs.conf || error_exit 'Failed to run CloudWatch Logs agent setup' \n"
+                        ]
+                      ]
+                    },
+										"sudo touch /etc/systemd/system/awslogs.service \n",
+										"sudo chmod o+w /etc/systemd/system/awslogs.service \n",
+										"sudo echo '#!/bin/sh' >> /etc/systemd/system/awslogs.service \n",
+										"sudo echo '[Unit]' >> /etc/systemd/system/awslogs.service \n",
+										"sudo echo 'Description=The CloudWatch Logs agent' >> /etc/systemd/system/awslogs.service \n",
+										"sudo echo 'After=rc-local.service' >> /etc/systemd/system/awslogs.service \n",
+										"sudo echo '' >> /etc/systemd/system/awslogs.service \n",
+										"sudo echo '[Service]' >> /etc/systemd/system/awslogs.service \n",
+										"sudo echo 'Type=simple' >> /etc/systemd/system/awslogs.service \n",
+										"sudo echo 'Restart=always' >> /etc/systemd/system/awslogs.service \n",
+										"sudo echo 'KillMode=process' >> /etc/systemd/system/awslogs.service \n",
+										"sudo echo 'TimeoutSec=infinity' >> /etc/systemd/system/awslogs.service \n",
+										"sudo echo 'PIDFile=/var/awslogs/state/awslogs.pid' >> /etc/systemd/system/awslogs.service \n",
+										"sudo echo 'ExecStart=/var/awslogs/bin/awslogs-agent-launcher.sh --start --background --pidfile $PIDFILE --user awslogs --chuid awslogs &' >> /etc/systemd/system/awslogs.service \n",
+										"sudo echo '' >> /etc/systemd/system/awslogs.service \n",
+										"sudo echo '[Install]' >> /etc/systemd/system/awslogs.service \n",
+										"sudo echo 'WantedBy=multi-user.target' >> /etc/systemd/system/awslogs.service \n",
+										"sudo chmod o+x /etc/systemd/system/awslogs.service \n",
+										"sudo systemctl start awslogs.service \n",
+										"sudo systemctl enable awslogs.service \n"
 									]
                 ]
               }
@@ -169,7 +212,11 @@
 							"ReadCapacityUnits" : "5",
 							"WriteCapacityUnits" : "5"
 						},
-						"TableName" : {"Ref" : "DynamoDBTableName"}
+						"TableName" : {"Ref" : "DynamoDBTableName"},
+						"TimeToLiveSpecification": {
+							"AttributeName": "TTL",
+							"Enabled": "true"
+						}
 					}
 				},
 				"myS3Bucket" : {
@@ -196,6 +243,12 @@
 						"DBName" : { "Ref" : "DBName" },
 						"VPCSecurityGroups" : [{"Ref" : "DBSecurityGroupId"}]
 					}
+				},
+				"mySNSTopic" : {
+					"Type":"AWS::SNS::Topic",
+         	"Properties":{
+            "TopicName":{ "Ref":"SNSTopicName"}
+         	}
 				}
 			}
 		}
