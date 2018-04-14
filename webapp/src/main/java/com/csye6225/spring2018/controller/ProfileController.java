@@ -62,7 +62,7 @@ public class ProfileController {
                     FileInputStream stream = (FileInputStream) file.getInputStream();
                     ObjectMetadata objectMetadata = new ObjectMetadata();
                     PutObjectRequest putObjectRequest = new PutObjectRequest(amazonFileUploadLocationOriginal, keyName, stream, objectMetadata);
-                    putObjectRequest.setCannedAcl(CannedAccessControlList.PublicReadWrite);
+                    putObjectRequest.setCannedAcl(CannedAccessControlList.PublicRead);
                     PutObjectResult result = s3Client.putObject(putObjectRequest);
                     System.out.println("Etag:" + result.getETag() + "-->" + result);
 
