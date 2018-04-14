@@ -102,7 +102,34 @@
 		},
 		"domainName": {
 			"Type" : "String"
-		}
+		},
+		"CodeDeployApplicationName": {
+    	"Type" : "String"
+    },
+    "CodeDeployApplicationComputePlatform": {
+  		"Type" : "String"
+  	},
+  	"DeploymentStyleForApplication": {
+			"Type" : "String"
+  	},
+  	"DeploymentOptionForApplication": {
+	   	"Type" : "String"
+		},
+		"Ec2TagFiltersKey": {
+    	"Type" : "String"
+		},
+  	"Ec2TagFiltersValue": {
+    	"Type" : "String"
+    },
+    "Ec2TagFiltersType": {
+    	"Type" : "String"
+    },
+  	"CodeDeployConfig": {
+    	"Type" : "String"
+  	},
+  	"CodeDeployServiceRoleArn" : {
+    	"Type" : "String"
+  	}
 	},
 	"Resources": {
 				"myEC2Instances" : {
@@ -410,6 +437,36 @@
          	"Properties":{
             "TopicName":{ "Ref":"SNSTopicName"}
          	}
+				},
+				"myCodeDeployApplication" : {
+  				"Type": "AWS::CodeDeploy::Application",
+        	"Properties": {
+	        	"ApplicationName" : {"Ref" : "CodeDeployApplicationName"},
+          	"ComputePlatform" : {"Ref" : "CodeDeployApplicationComputePlatform"}
+      		}
+        },
+        "myCodeDeploymentGroup" : {
+        	"Type" : "AWS::CodeDeploy::DeploymentGroup",
+          	"Properties" : {
+            	"ApplicationName" : {"Ref" : "myCodeDeployApplication"},
+              "AutoScalingGroups" : [
+              	{"Ref" : "myAutoScalingGroup"}
+              ],
+            	"DeploymentGroupName" : {"Ref" : "CodeDeployApplicationName"},
+            	"DeploymentStyle" : {
+              	"DeploymentType" : {"Ref" : "DeploymentStyleForApplication"},
+              	"DeploymentOption" : {"Ref" : "DeploymentOptionForApplication"}
+            	},
+            	"Ec2TagFilters" : [
+              	{
+                	"Key" : {"Ref" : "Ec2TagFiltersKey"},
+                	"Value" : {"Ref" : "Ec2TagFiltersValue"},
+                	"Type": {"Ref" : "Ec2TagFiltersType"}
+              	}
+            	],
+            	"DeploymentConfigName" : {"Ref" : "CodeDeployConfig"},
+            	"ServiceRoleArn" : {"Ref" : "CodeDeployServiceRoleArn"}
+            }
+        	}
 				}
 			}
-		}
