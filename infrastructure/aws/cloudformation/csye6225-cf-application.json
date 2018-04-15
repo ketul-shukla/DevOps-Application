@@ -165,7 +165,6 @@
 		                "sudo wget https://aws-codedeploy-us-east-1.s3.amazonaws.com/latest/install \n",
 		                "sudo chmod +x ./install \n",
 		                "sudo ./install auto \n",
-		                "sudo service codedeploy-agent start \n",
 		                "sudo apt-get install tomcat8 -y \n",
 		                "sudo chmod o+w /etc/default/tomcat8 \n",
 		                "sudo echo JAVA_OPTS=\\\"\\${JAVA_OPTS} -Dspring.profiles.active=aws\\\"\\ >> /etc/default/tomcat8 \n",
@@ -229,7 +228,8 @@
 		                "sudo echo 'WantedBy=multi-user.target' >> /etc/systemd/system/awslogs.service \n",
 		                "sudo chmod o+x /etc/systemd/system/awslogs.service \n",
 		                "sudo systemctl start awslogs.service \n",
-		                "sudo systemctl enable awslogs.service \n"
+		                "sudo systemctl enable awslogs.service \n",
+										"sudo service codedeploy-agent start \n"
 		              ]
 		            ]
 		          }
@@ -366,7 +366,13 @@
 						"Protocol" : "HTTP",
 						"TargetType" : "instance",
 						"UnhealthyThresholdCount" : "3",
-						"VpcId" : {"Ref" : "vpcID"}
+						"VpcId" : {"Ref" : "vpcID"},
+						"Tags" : [
+							{
+				        "Key" : "Name",
+				        "Value" : {"Ref" : "EC2InstanceName"}
+							}
+						]
 					}
 				},
 				"myRecordSet" : {
@@ -464,6 +470,9 @@
                 	"Type": {"Ref" : "Ec2TagFiltersType"}
               	}
             	],
+							"LoadBalancerInfo" : {
+    						"TargetGroupInfoList" : [ { "Name": { "Fn::GetAtt": ["myALBTargetGroup", "TargetGroupName"] } } ]
+							},
             	"DeploymentConfigName" : {"Ref" : "CodeDeployConfig"},
             	"ServiceRoleArn" : {"Ref" : "CodeDeployServiceRoleArn"}
             }
