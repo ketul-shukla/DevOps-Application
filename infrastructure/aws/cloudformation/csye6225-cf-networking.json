@@ -94,6 +94,19 @@
 									}
 								}
 							},
+							"myWebServerSubnet2" : {
+								"Type" : "AWS::EC2::Subnet",
+								"Properties" : {
+									"VpcId" : { "Ref" : "myVPC" },
+									"CidrBlock" : "10.0.3.0/24",
+									"AvailabilityZone" : "us-east-1d",
+									"MapPublicIpOnLaunch" : "true",
+									"Tags": [{
+										"Key": "Name",
+										"Value": {"Fn::Join": [ "", [{ "Ref" : "AWS::StackName" },"-csye6225-subnet2-for-webservers"]] }
+										}]
+									}
+								},
 							"myDBServerSubnet" : {
 								"Type" : "AWS::EC2::Subnet",
 								"Properties" : {
@@ -129,6 +142,21 @@
 										}]
 									}
 								},
+								"myLoadBalancerSecurityGroup" : {
+									"Type": "AWS::EC2::SecurityGroup",
+									"Properties": {
+										"GroupDescription": "csye6225-applicationloadbalancer",
+										"VpcId": {"Ref" : "myVPC"},
+										"SecurityGroupIngress": [
+											{
+												"IpProtocol": "tcp",
+												"FromPort": "443",
+												"ToPort": "443",
+												"CidrIp": "0.0.0.0/0"
+											}
+										]
+									}
+								},
 								"myEC2SecurityGroup": {
 									"Type": "AWS::EC2::SecurityGroup",
 									"Properties": {
@@ -136,30 +164,14 @@
 										"VpcId": {
 											"Ref": "myVPC"
 										},
-										"SecurityGroupIngress": [{
-											"IpProtocol": "tcp",
-											"FromPort": "80",
-											"ToPort": "80",
-											"CidrIp": "0.0.0.0/0"
-										},
-										{
-											"IpProtocol": "tcp",
-											"FromPort": "8080",
-											"ToPort": "8080",
-											"CidrIp": "0.0.0.0/0"
-										},
-										{
-											"IpProtocol": "tcp",
-											"FromPort": "22",
-											"ToPort": "22",
-											"CidrIp": "0.0.0.0/0"
-										},
-										{
-											"IpProtocol": "tcp",
-											"FromPort": "443",
-											"ToPort": "443",
-											"CidrIp": "0.0.0.0/0"
-										}]
+										"SecurityGroupIngress": [
+											{
+												"IpProtocol": "tcp",
+												"FromPort": "8080",
+												"ToPort": "8080",
+												"SourceSecurityGroupId": {"Ref" : "myLoadBalancerSecurityGroup"}
+											}
+										]
 									}
 								},
 								"myDBSecurityGroup": {
