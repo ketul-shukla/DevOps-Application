@@ -24,10 +24,10 @@
    Jmeter Testing:
    
       - Create a test Plan
-      - add Thread Group
+      - Add Thread Group
       - Add http request 
-      - set No. of thread and user to 100 
-      - run test
+      - Set No. of thread and user to 100 
+      - Run test
   
    
   Link to TravisCI build for the project
